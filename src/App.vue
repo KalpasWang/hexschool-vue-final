@@ -5,6 +5,15 @@
       <router-link to="/about">About</router-link>
     </div>
     <router-view />
+    <button type="button" class="btn btn-primary">Primary</button>
+    <button type="button" class="btn btn-secondary">Secondary</button>
+    <button type="button" class="btn btn-success">Success</button>
+    <button type="button" class="btn btn-danger">Danger</button>
+    <button type="button" class="btn btn-warning">Warning</button>
+    <button type="button" class="btn btn-info">Info</button>
+    <button type="button" class="btn btn-light">Light</button>
+    <button type="button" class="btn btn-dark">Dark</button>
+    <a href="#" class="btn btn-primary">12345</a>
   </div>
 </template>
 
@@ -13,8 +22,6 @@ export default {
   name: "App",
   created() {
     const apiPath = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/products`;
-    // const apiPath =
-    // ("https://vue-course-api.hexschool.io/api/allforlove/products");
     console.log(process.env.VUE_APP_TITLE);
     console.log(apiPath);
     this.$http.get(apiPath).then((response) => {
@@ -27,14 +34,16 @@ export default {
 };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<style lang="scss">
+@import "./assets/scss/all";
+
+// #app {
+//   font-family: Avenir, Helvetica, Arial, sans-serif;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   text-align: center;
+//   color: #2c3e50;
+// }
 
 #nav {
   padding: 30px;
