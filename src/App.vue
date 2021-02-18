@@ -4,18 +4,27 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   created() {
-    // const apiPath = `${process.env.API_BASE_PATH}/API/${process.env.API_CUSTOM_PATH}/products`
-
-  }
-}
+    // const apiPath = `${process.env.VUE_APP_API_PATH}/API/${process.env.VUE_APP_API_PARAMS}/products`;
+    const apiPath =
+      "https://vue-course-api.hexschool.io/api/allforlove/products";
+    // console.log(process.env.VUE_APP_TITLE);
+    // console.log(apiPath);
+    this.$http.get(apiPath).then((response) => {
+      console.log(response.data);
+    });
+  },
+  mounted() {
+    // console.log(process.env.VUE_APP_API_PATH);
+  },
+};
 </script>
 
 <style>
