@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="py-5">
     <form class="form-signin" @submit.prevent="login">
       <img
         class="mb-4"
@@ -57,16 +57,15 @@ export default {
       const path = `${process.env.VUE_APP_API_PATH}/admin/signin`;
       const vm = this;
       this.$http.post(path, this.user).then((res) => {
-        console.log(res.data);
+        console.log(path, res.data);
         if (res.data.success) {
-          this.$http
-            .get(
-              `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}`
-            )
-            .then((res) => {
-              console.log(res.data);
-            });
-          // vm.$router.push({ name: "Home" });
+          const token = res.data.token;
+          const expired = res.data.expired;
+          console.log(token, expired);
+          document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+          vm.$router.push({ name: "Home" });
+        } else {
+          console.log("登入失敗");
         }
       });
     },
@@ -75,7 +74,7 @@ export default {
 </script>
 
 <style scoped>
-html,
+/* html,
 body {
   height: 100%;
 }
@@ -86,7 +85,7 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #f5f5f5;
-}
+} */
 
 .form-signin {
   width: 100%;
