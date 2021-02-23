@@ -4,10 +4,12 @@ import router from './router';
 import store from './store';
 import VueAxios from 'vue-axios';
 import axios from 'axios';
+import VModal from 'vue-js-modal';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 Vue.use(VueAxios, axios);
+Vue.use(VModal);
 
 // axios.defaults.withCredentials = true;
 

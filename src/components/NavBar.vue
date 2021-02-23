@@ -22,7 +22,10 @@
     />
     <ul class="navbar-nav px-3">
       <li class="nav-item text-nowrap">
-        <a class="nav-link" href="#">Sign out</a>
+        <!-- <a class="nav-link" href="#">Sign out</a> -->
+        <router-link :to="{ name: 'Home' }" class="nav-link">
+          回首頁
+        </router-link>
       </li>
     </ul>
   </nav>
