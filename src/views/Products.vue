@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BookModal ref="bookModal" />
     <h1
       class="display-4 d-flex justify-content-between align-items-center my-4"
     >
@@ -42,12 +43,17 @@
 </template>
 
 <script>
+import BookModal from "@/components/BookModal";
+
 export default {
   name: "Products",
   data() {
     return {
       products: [],
     };
+  },
+  components: {
+    BookModal,
   },
   methods: {
     getProducts() {
@@ -60,7 +66,9 @@ export default {
       });
     },
 
-    openModal() {},
+    openModal() {
+      this.$refs.bookModal.show();
+    },
   },
 
   created() {
