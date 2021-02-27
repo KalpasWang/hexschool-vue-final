@@ -37,7 +37,7 @@
                       type="text"
                       class="form-control"
                       id="image"
-                      v-model="tempBook.imageUrl"
+                      v-model="tempProduct.image"
                       placeholder="請輸入圖片連結"
                     />
                   </div>
@@ -56,7 +56,7 @@
                   <img
                     img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
                     class="img-fluid"
-                    :src="tempBook.imageUrl"
+                    :src="tempProduct.image"
                     alt=""
                   />
                 </div>
@@ -67,7 +67,7 @@
                       type="text"
                       class="form-control"
                       id="title"
-                      v-model="tempBook.title"
+                      v-model="tempProduct.title"
                       placeholder="請輸入標題"
                     />
                   </div>
@@ -79,7 +79,7 @@
                         type="text"
                         class="form-control"
                         id="category"
-                        v-model="tempBook.category"
+                        v-model="tempProduct.category"
                         placeholder="請輸入分類"
                       />
                     </div>
@@ -89,7 +89,7 @@
                         type="unit"
                         class="form-control"
                         id="unit"
-                        v-model="tempBook.unit"
+                        v-model="tempProduct.unit"
                         placeholder="請輸入單位"
                       />
                     </div>
@@ -102,7 +102,7 @@
                         type="number"
                         class="form-control"
                         id="origin_price"
-                        v-model="tempBook.origin_price"
+                        v-model="tempProduct.origin_price"
                         placeholder="請輸入原價"
                       />
                     </div>
@@ -112,7 +112,7 @@
                         type="number"
                         class="form-control"
                         id="price"
-                        v-model="tempBook.price"
+                        v-model="tempProduct.price"
                         placeholder="請輸入售價"
                       />
                     </div>
@@ -125,7 +125,7 @@
                       type="text"
                       class="form-control"
                       id="description"
-                      v-model="tempBook.description"
+                      v-model="tempProduct.description"
                       placeholder="請輸入產品描述"
                     ></textarea>
                   </div>
@@ -135,7 +135,7 @@
                       type="text"
                       class="form-control"
                       id="content"
-                      v-model="tempBook.content"
+                      v-model="tempProduct.content"
                       placeholder="請輸入產品說明內容"
                     ></textarea>
                   </div>
@@ -144,7 +144,7 @@
                       <input
                         class="form-check-input"
                         type="checkbox"
-                        v-model="tempBook.is_enabled"
+                        v-model="tempProduct.is_enabled"
                         :true-value="1"
                         :false-value="0"
                         id="is_enabled"
@@ -185,29 +185,34 @@ export default {
   data() {
     return {
       showModal: false,
-      tempBook: {},
+      tempProduct: {},
+      isNew: true,
     };
-  },
-
-  created() {
-    if (this.item) {
-      this.data = this.item;
-    }
   },
 
   methods: {
     show() {
+      if (typeof this.item === "object") {
+        this.isNew = true;
+        this.tempProduct = this.item;
+      } else {
+        this.tempProduct = {};
+        this.isNew = false;
+      }
       this.showModal = true;
     },
 
     hide() {
       // 還原為預設值
-      this.tempBook = this.$options.data().tempBook;
+      this.tempProduct = this.$options.data().tempProduct;
       this.showModal = false;
     },
 
     emitResult() {
-      this.$emit("save", this.tempBook);
+      this.$emit("save", {
+        isNew: this.isNew,
+        item: this.tempProduct,
+      });
     },
   },
 };

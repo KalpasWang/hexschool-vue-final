@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BookModal ref="bookModal" />
+    <BookModal :item="editingProduct" ref="bookModal" @save="updateProduct" />
     <h1
       class="display-4 d-flex justify-content-between align-items-center my-4"
     >
@@ -32,7 +32,12 @@
               <span v-else class="text-secondary">否</span>
             </td>
             <td class="align-middle" width="150">
-              <button class="btn btn-sm btn-outline-primary mr-1">編輯</button>
+              <button
+                class="btn btn-sm btn-outline-primary mr-1"
+                @click="openModal(item)"
+              >
+                編輯
+              </button>
               <button class="btn btn-sm btn-outline-danger">刪除</button>
             </td>
           </tr>
@@ -50,6 +55,7 @@ export default {
   data() {
     return {
       products: [],
+      editingProduct: null,
     };
   },
   components: {
@@ -66,8 +72,13 @@ export default {
       });
     },
 
-    openModal() {
-      this.$refs.bookModal.show();
+    openModal(item) {
+      this.$refs.bookModal.show(item);
+    },
+
+    updateProduct(e) {
+      console.log(e);
+      this.$refs.bookModal.hide();
     },
   },
 
