@@ -1,11 +1,11 @@
 <template>
   <div>
-    <BookModal :item="editingProduct" ref="bookModal" @save="updateProduct" />
+    <BookModal ref="bookModal" @save="updateProduct" />
     <h1
       class="display-4 d-flex justify-content-between align-items-center my-4"
     >
       所有書籍
-      <button @click="openModal" class="btn btn-primary">新增書籍</button>
+      <button @click="openModal({})" class="btn btn-primary">新增書籍</button>
     </h1>
     <div class="table-responsive">
       <table class="table table-hover vertical-align">
@@ -38,7 +38,12 @@
               >
                 編輯
               </button>
-              <button class="btn btn-sm btn-outline-danger">刪除</button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                @click="deleteProduct(item)"
+              >
+                刪除
+              </button>
             </td>
           </tr>
         </tbody>
@@ -55,7 +60,6 @@ export default {
   data() {
     return {
       products: [],
-      editingProduct: null,
     };
   },
   components: {
@@ -63,7 +67,7 @@ export default {
   },
   methods: {
     getProducts() {
-      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products`;
+      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products/all`;
       this.$http.get(path).then((res) => {
         console.log(path, res.data);
         if (res.data.success) {
@@ -76,9 +80,52 @@ export default {
       this.$refs.bookModal.show(item);
     },
 
-    updateProduct(e) {
-      console.log(e);
-      this.$refs.bookModal.hide();
+    updateProduct(item) {
+      console.log(item);
+      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product`;
+      let method = "post";
+      const isNew = item.id ? false : true;
+      const vm = this;
+      if (!isNew) {
+        path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
+        method = "put";
+      }
+      this.$http[method](path, { data: item })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            vm.getProducts();
+          } else {
+            console.log("編輯失敗：", res.data);
+          }
+          vm.$refs.bookModal.hide();
+        })
+        .catch((err) => {
+          console.log("Error: ", err);
+          vm.$refs.bookModal.hide();
+        });
+    },
+
+    deleteProduct(item) {
+      const vm = this;
+      console.log(item);
+      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
+      this.$http
+        .delete(path)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            vm.getProducts();
+          } else {
+            console.log("刪除失敗");
+          }
+          vm.$refs.bookModal.hide();
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log("刪除失敗");
+          vm.$refs.bookModal.hide();
+        });
     },
   },
 

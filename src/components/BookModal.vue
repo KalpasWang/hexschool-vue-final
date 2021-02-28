@@ -36,7 +36,6 @@
                     <input
                       type="text"
                       class="form-control"
-                      id="image"
                       v-model="tempProduct.image"
                       placeholder="請輸入圖片連結"
                     />
@@ -54,6 +53,7 @@
                     />
                   </div>
                   <img
+                    v-if="tempProduct.image"
                     img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
                     class="img-fluid"
                     :src="tempProduct.image"
@@ -181,24 +181,16 @@
 <script>
 export default {
   name: "BookModal",
-  props: ["item"],
   data() {
     return {
       showModal: false,
       tempProduct: {},
-      isNew: true,
     };
   },
 
   methods: {
-    show() {
-      if (typeof this.item === "object") {
-        this.isNew = true;
-        this.tempProduct = this.item;
-      } else {
-        this.tempProduct = {};
-        this.isNew = false;
-      }
+    show(item) {
+      this.tempProduct = item;
       this.showModal = true;
     },
 
@@ -209,10 +201,7 @@ export default {
     },
 
     emitResult() {
-      this.$emit("save", {
-        isNew: this.isNew,
-        item: this.tempProduct,
-      });
+      this.$emit("save", this.tempProduct);
     },
   },
 };
