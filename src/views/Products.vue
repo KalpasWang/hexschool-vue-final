@@ -108,8 +108,12 @@ export default {
 
     deleteProduct(item) {
       const vm = this;
-      console.log(item);
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
+      console.log(item);
+      const confirmResult = confirm(`確定要刪除 ${item.title} 這項產品嗎？`);
+      if (!confirmResult) {
+        return;
+      }
       this.$http
         .delete(path)
         .then((res) => {
