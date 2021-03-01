@@ -71,7 +71,7 @@ export default {
       this.$http.get(path).then((res) => {
         console.log(path, res.data);
         if (res.data.success) {
-          this.products = res.data.products;
+          this.products = Object.values(res.data.products).reverse();
         }
       });
     },

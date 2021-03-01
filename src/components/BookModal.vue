@@ -41,17 +41,21 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label for="customFile"
-                      >或 上傳圖片
-                      <i class="fas fa-spinner fa-spin"></i>
+                    <label for="customFile">
+                      或 上傳圖片
+                      <i v-if="uploadingImg" class="fas fa-spinner fa-spin"></i>
                     </label>
                     <input
                       type="file"
                       id="customFile"
                       class="form-control"
                       ref="files"
+                      @change="uploadImage"
                     />
                   </div>
+                  <p class="text-danger font-weight-bold">
+                    {{ errorMsg }}
+                  </p>
                   <img
                     v-if="tempProduct.image"
                     img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
@@ -185,6 +189,8 @@ export default {
     return {
       showModal: false,
       tempProduct: {},
+      uploadingImg: false,
+      errorMsg: "",
     };
   },
 
@@ -197,11 +203,55 @@ export default {
     hide() {
       // 還原為預設值
       this.tempProduct = this.$options.data().tempProduct;
+      this.errorMsg = "";
       this.showModal = false;
     },
 
     emitResult() {
       this.$emit("save", this.tempProduct);
+    },
+
+    uploadImage() {
+      this.uploadingImg = true;
+      // console.log(this);
+      const uploadedFile = this.$refs.files.files[0];
+      if (uploadedFile.size > 1024 * 1024) {
+        this.errorMsg = "檔案必須小於 1MB";
+        this.uploadingImg = false;
+        return;
+      }
+      if (!uploadedFile.type.match("image/.+")) {
+        this.errorMsg = "Content type 必須是 image";
+        this.uploadingImg = false;
+        return;
+      }
+      if (uploadedFile.name < 32) {
+        this.errorMsg = "檔案名稱長度小於32";
+        this.uploadingImg = false;
+        return;
+      }
+      const vm = this;
+      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/upload`;
+      const formData = new FormData();
+      formData.append("file-to-upload", uploadedFile);
+      this.$http
+        .post(path, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            vm.$set(vm.tempProduct, "image", res.data.imageUrl);
+            vm.errorMsg = "";
+            vm.uploadingImg = false;
+          }
+        })
+        .catch((err) => {
+          vm.uploadingImg = false;
+          vm.errorMsg = err;
+        });
     },
   },
 };
