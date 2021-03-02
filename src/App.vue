@@ -2,6 +2,7 @@
   <div id="app">
     <Loading :active.sync="isLoading"></Loading>
     <router-view />
+    <notifications group="errorMsg" />
   </div>
 </template>
 
@@ -30,6 +31,11 @@ export default {
   // -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.notification-title,
+.notification-content {
+  font-size: 1.2rem !important;
 }
 
 #nav {
