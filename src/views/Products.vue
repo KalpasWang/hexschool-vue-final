@@ -54,6 +54,7 @@
 
 <script>
 import BookModal from "@/components/BookModal";
+import { SETLOADING } from "@/store/modules/mutation-types";
 
 export default {
   name: "Products",
@@ -67,13 +68,24 @@ export default {
   },
   methods: {
     getProducts() {
+      this.$store.commit(SETLOADING, true);
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products/all`;
-      this.$http.get(path).then((res) => {
-        console.log(path, res.data);
-        if (res.data.success) {
-          this.products = Object.values(res.data.products).reverse();
-        }
-      });
+      this.$http
+        .get(path)
+        .then((res) => {
+          // console.log(path, res.data);
+          if (res.data.success) {
+            this.products = Object.values(res.data.products).reverse();
+          } else {
+            console.log("取得產品列表失敗");
+          }
+        })
+        .catch(() => {
+          console.log("取得產品列表失敗");
+        })
+        .finally(() => {
+          this.$store.commit(SETLOADING, false);
+        });
     },
 
     openModal(item) {
@@ -81,7 +93,8 @@ export default {
     },
 
     updateProduct(item) {
-      console.log(item);
+      // console.log(item);
+      this.$store.commit(SETLOADING, true);
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product`;
       let method = "post";
       const isNew = item.id ? false : true;
@@ -92,21 +105,24 @@ export default {
       }
       this.$http[method](path, { data: item })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.success) {
             vm.getProducts();
           } else {
             console.log("編輯失敗：", res.data);
           }
-          vm.$refs.bookModal.hide();
         })
         .catch((err) => {
           console.log("Error: ", err);
+        })
+        .finally(() => {
           vm.$refs.bookModal.hide();
+          vm.$store.commit(SETLOADING, false);
         });
     },
 
     deleteProduct(item) {
+      this.$store.commit(SETLOADING, true);
       const vm = this;
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
       console.log(item);
@@ -123,12 +139,14 @@ export default {
           } else {
             console.log("刪除失敗");
           }
-          vm.$refs.bookModal.hide();
         })
         .catch((err) => {
           console.log(err);
           console.log("刪除失敗");
+        })
+        .finally(() => {
           vm.$refs.bookModal.hide();
+          vm.$store.commit(SETLOADING, false);
         });
     },
   },

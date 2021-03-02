@@ -1,12 +1,23 @@
 <template>
   <div id="app">
+    <Loading :active.sync="isLoading"></Loading>
     <router-view />
   </div>
 </template>
 
 <script>
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+import { mapGetters } from "vuex";
+
 export default {
   name: "App",
+  computed: {
+    ...mapGetters(["isLoading"]),
+  },
+  components: {
+    Loading,
+  },
 };
 </script>
 
