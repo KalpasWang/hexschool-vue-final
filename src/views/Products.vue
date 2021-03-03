@@ -28,8 +28,12 @@
             <td class="align-middle" width="72">{{ item.origin_price }}</td>
             <td class="align-middle" width="72">{{ item.price }}</td>
             <td class="align-middle" width="100">
-              <span v-if="item.is_enabled" class="text-success">是</span>
-              <span v-else class="text-secondary">否</span>
+              <span v-if="item.is_enabled" class="text-secondary">
+                <i class="far fa-circle"></i>
+              </span>
+              <span v-else class="text-secondary">
+                <i class="fas fa-times"></i>
+              </span>
             </td>
             <td class="align-middle" width="150">
               <button
@@ -48,12 +52,20 @@
           </tr>
         </tbody>
       </table>
+      <Pagination
+        class="mt-5"
+        :pages="totalPages"
+        :current="currentPage"
+        :hasPrev="hasPrev"
+        :hasNext="hasNext"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import BookModal from "@/components/BookModal";
+import Pagination from "@/components/Pagination";
 import { SETLOADING } from "@/store/modules/mutation-types";
 
 export default {
@@ -61,21 +73,32 @@ export default {
   data() {
     return {
       products: [],
+      totalPages: 1,
+      currentPage: 1,
+      hasPrev: false,
+      hasNext: false,
     };
   },
   components: {
     BookModal,
+    Pagination,
   },
   methods: {
-    getProducts() {
+    getProducts(page = 1) {
       this.$store.commit(SETLOADING, true);
-      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products/all`;
+      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products?page=${page}`;
       this.$http
         .get(path)
         .then((res) => {
-          // console.log(path, res.data);
+          console.log(path, res.data);
           if (res.data.success) {
-            this.products = Object.values(res.data.products).reverse();
+            this.products = res.data.products;
+            if (res.data.pagination) {
+              this.totalPages = res.data.pagination.total_pages;
+              this.currentPage = res.data.pagination.current_page;
+              this.hasPrev = res.data.pagination.has_pre;
+              this.hasNext = res.data.pagination.has_next;
+            }
           } else {
             this.$notify({
               group: "alert",
@@ -87,7 +110,7 @@ export default {
         .catch(() => {
           this.$notify({
             group: "alert",
-            title: "取得產品列表失敗",
+            title: "無法取得產品列表",
             type: "error",
           });
         })
