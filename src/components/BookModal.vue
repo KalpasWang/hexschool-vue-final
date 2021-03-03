@@ -192,7 +192,7 @@ export default {
 
   methods: {
     show(item) {
-      this.tempProduct = item;
+      Object.assign(this.tempProduct, item);
       this.showModal = true;
     },
 
@@ -212,7 +212,7 @@ export default {
       const uploadedFile = this.$refs.files.files[0];
       if (uploadedFile.size > 1024 * 1024) {
         this.$notify({
-          group: "errorMsg",
+          group: "alert",
           title: "檔案必須小於 1MB",
           type: "error",
         });
@@ -221,7 +221,7 @@ export default {
       }
       if (!uploadedFile.type.match("image/.+")) {
         this.$notify({
-          group: "errorMsg",
+          group: "alert",
           title: "Content type 必須是 image",
           type: "error",
         });
@@ -230,7 +230,7 @@ export default {
       }
       if (uploadedFile.name < 32) {
         this.$notify({
-          group: "errorMsg",
+          group: "alert",
           title: "檔案名稱長度小於32",
           type: "error",
         });
@@ -252,12 +252,17 @@ export default {
           if (res.data.success) {
             vm.$set(vm.tempProduct, "image", res.data.imageUrl);
             vm.uploadingImg = false;
+            this.$notify({
+              group: "alert",
+              title: "上傳成功",
+              type: "success",
+            });
           }
         })
         .catch((err) => {
           vm.uploadingImg = false;
           this.$notify({
-            group: "errorMsg",
+            group: "alert",
             title: "上傳失敗",
             text: err.message,
             type: "error",

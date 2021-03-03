@@ -77,11 +77,19 @@ export default {
           if (res.data.success) {
             this.products = Object.values(res.data.products).reverse();
           } else {
-            console.log("取得產品列表失敗");
+            this.$notify({
+              group: "alert",
+              title: "取得產品列表失敗",
+              type: "error",
+            });
           }
         })
         .catch(() => {
-          console.log("取得產品列表失敗");
+          this.$notify({
+            group: "alert",
+            title: "取得產品列表失敗",
+            type: "error",
+          });
         })
         .finally(() => {
           this.$store.commit(SETLOADING, false);
@@ -108,12 +116,28 @@ export default {
           // console.log(res.data);
           if (res.data.success) {
             vm.getProducts();
+            this.$notify({
+              group: "alert",
+              title: "上傳成功",
+              text: res.data.message,
+              type: "success",
+            });
           } else {
-            console.log("編輯失敗：", res.data);
+            this.$notify({
+              group: "alert",
+              title: "上傳失敗",
+              text: res.data.message,
+              type: "error",
+            });
           }
         })
         .catch((err) => {
-          console.log("Error: ", err);
+          this.$notify({
+            group: "alert",
+            title: "上傳失敗",
+            text: err.message,
+            type: "error",
+          });
         })
         .finally(() => {
           vm.$refs.bookModal.hide();
@@ -136,13 +160,28 @@ export default {
           console.log(res.data);
           if (res.data.success) {
             vm.getProducts();
+            this.$notify({
+              group: "alert",
+              title: "刪除成功",
+              text: res.data.message,
+              type: "success",
+            });
           } else {
-            console.log("刪除失敗");
+            this.$notify({
+              group: "alert",
+              title: "刪除失敗",
+              text: res.data.message,
+              type: "error",
+            });
           }
         })
         .catch((err) => {
-          console.log(err);
-          console.log("刪除失敗");
+          this.$notify({
+            group: "alert",
+            title: "刪除失敗",
+            text: err.message,
+            type: "error",
+          });
         })
         .finally(() => {
           vm.$refs.bookModal.hide();

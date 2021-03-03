@@ -2,7 +2,7 @@
   <div id="app">
     <Loading :active.sync="isLoading"></Loading>
     <router-view />
-    <notifications group="errorMsg" />
+    <notifications group="alert" />
   </div>
 </template>
 
@@ -33,9 +33,13 @@ export default {
   color: #2c3e50;
 }
 
+.notification-title {
+  font-weight: bold !important;
+}
+
 .notification-title,
 .notification-content {
-  font-size: 1.2rem !important;
+  font-size: 1rem !important;
 }
 
 #nav {
