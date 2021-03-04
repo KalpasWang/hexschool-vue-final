@@ -25,8 +25,10 @@
             </td>
             <td class="align-middle">{{ item.category }}</td>
             <td class="align-middle">{{ item.title }}</td>
-            <td class="align-middle" width="72">{{ item.origin_price }}</td>
-            <td class="align-middle" width="72">{{ item.price }}</td>
+            <td class="align-middle" width="72">
+              {{ item.origin_price | currency }}
+            </td>
+            <td class="align-middle" width="72">{{ item.price | currency }}</td>
             <td class="align-middle" width="100">
               <span v-if="item.is_enabled" class="text-secondary">
                 <i class="far fa-circle"></i>
