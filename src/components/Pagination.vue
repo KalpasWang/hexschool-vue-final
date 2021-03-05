@@ -39,7 +39,7 @@ export default {
   props: ["pages", "current", "hasPrev", "hasNext"],
   methods: {
     getPage(page) {
-      this.$parent.getProducts(page);
+      this.$emit("getPage", page);
     },
   },
 };

@@ -4,81 +4,55 @@
     class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
   >
     <div class="sidebar-sticky pt-3">
-      <ul class="nav flex-column">
+      <h6
+        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+      >
+        <span>商品管理</span>
+        <span
+          class="d-flex align-items-center text-muted"
+          aria-label="administer"
+        >
+          <activity-icon size="1.5x"></activity-icon>
+        </span>
+      </h6>
+      <ul class="nav flex-column text-left ml-3">
         <li class="nav-item">
-          <a class="nav-link active" href="#">
-            <span data-feather="home"></span>
-            Dashboard <span class="sr-only">(current)</span>
-          </a>
+          <router-link :to="{ name: 'Products' }" class="nav-link">
+            <book-icon size="1.5x"></book-icon>
+            產品列表
+          </router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file"></span>
-            Orders
-          </a>
+          <router-link :to="{ name: 'Orders' }" class="nav-link">
+            <list-icon size="1.5x"></list-icon>
+            訂單列表
+          </router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="shopping-cart"></span>
-            Products
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="users"></span>
-            Customers
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="bar-chart-2"></span>
-            Reports
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="layers"></span>
-            Integrations
-          </a>
+          <router-link :to="{ name: 'Coupons' }" class="nav-link">
+            <trending-down-icon size="1.5x"></trending-down-icon>
+            優惠券
+          </router-link>
         </li>
       </ul>
 
       <h6
         class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
       >
-        <span>Saved reports</span>
-        <a
+        <span>模擬功能</span>
+        <span
           class="d-flex align-items-center text-muted"
-          href="#"
-          aria-label="Add a new report"
+          aria-label="simulation"
         >
-          <span data-feather="plus-circle"></span>
-        </a>
+          <plus-circle-icon size="1.5x"></plus-circle-icon>
+        </span>
       </h6>
-      <ul class="nav flex-column mb-2">
+      <ul class="nav flex-column text-left ml-3 mb-2">
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
-            Current month
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
-            Last quarter
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
-            Social engagement
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
-            Year-end sale
-          </a>
+          <router-link :to="{ name: 'SimulateOrdering' }" class="nav-link">
+            <life-buoy-icon size="1.5x"></life-buoy-icon>
+            模擬商品訂購
+          </router-link>
         </li>
       </ul>
     </div>
@@ -86,7 +60,24 @@
 </template>
 
 <script>
+import {
+  BookIcon,
+  LifeBuoyIcon,
+  ActivityIcon,
+  PlusCircleIcon,
+  ListIcon,
+  TrendingDownIcon,
+} from "vue-feather-icons";
+
 export default {
   name: "SideBar",
+  components: {
+    BookIcon,
+    LifeBuoyIcon,
+    ActivityIcon,
+    PlusCircleIcon,
+    ListIcon,
+    TrendingDownIcon,
+  },
 };
 </script>

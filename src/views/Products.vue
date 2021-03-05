@@ -60,6 +60,7 @@
         :current="currentPage"
         :hasPrev="hasPrev"
         :hasNext="hasNext"
+        @getPage="getProducts"
       />
     </div>
   </div>

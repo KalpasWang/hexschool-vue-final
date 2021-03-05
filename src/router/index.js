@@ -5,6 +5,9 @@ import Home from '@/views/Home';
 import DashBoard from '@/views/DashBoard';
 import Login from '@/views/Login';
 import Products from '@/views/Products';
+import Orders from '@/views/Orders';
+import Coupons from '@/views/Coupons';
+import OrderingSimulation from '@/views/OrderingSimulation';
 
 Vue.use(VueRouter);
 
@@ -25,6 +28,21 @@ const routes = [
         name: 'Products',
         component: Products,
       },
+      {
+        path: 'orders',
+        name: 'Orders',
+        component: Orders,
+      },
+      {
+        path: 'coupons',
+        name: 'Coupons',
+        component: Coupons,
+      },
+      {
+        path: 'simulateOrdering',
+        name: 'SimulateOrdering',
+        component: OrderingSimulation,
+      },
     ],
   },
   {
@@ -39,6 +57,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
+  linkActiveClass: 'active',
   routes,
 });
 
