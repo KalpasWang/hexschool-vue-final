@@ -54,15 +54,16 @@
           </tr>
         </tbody>
       </table>
-      <Pagination
-        class="mt-5"
-        :pages="totalPages"
-        :current="currentPage"
-        :hasPrev="hasPrev"
-        :hasNext="hasNext"
-        @getPage="getProducts"
-      />
     </div>
+    <Pagination
+      v-if="totalPages === 1"
+      class="mt-5"
+      :pages="totalPages"
+      :current="currentPage"
+      :hasPrev="hasPrev"
+      :hasNext="hasNext"
+      @getPage="getProducts"
+    />
   </div>
 </template>
 
