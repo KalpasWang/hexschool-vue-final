@@ -6,12 +6,14 @@ import VueAxios from 'vue-axios';
 import axios from 'axios';
 import Notifications from 'vue-notification';
 import currencyFilter from './filters/currency';
+import dateFilter from './filters/date';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 Vue.use(VueAxios, axios);
 Vue.use(Notifications);
 Vue.filter('currency', currencyFilter);
+Vue.filter('date', dateFilter);
 
 // axios.defaults.withCredentials = true;
 
