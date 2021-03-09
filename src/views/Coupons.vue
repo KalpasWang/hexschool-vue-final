@@ -55,7 +55,7 @@
       :current="currentPage"
       :hasPrev="hasPrev"
       :hasNext="hasNext"
-      @getPage="getProducts"
+      @getPage="getCoupons"
     />
   </div>
 </template>
@@ -66,9 +66,6 @@ import Pagination from "@/components/Pagination";
 import { SETLOADING } from "@/store/modules/mutation-types";
 
 export default {
-  props: {
-    config: Object,
-  },
   data() {
     return {
       coupons: [],
@@ -88,12 +85,6 @@ export default {
     },
 
     getCoupons(page = 1) {
-      // const vm = this;
-      // const url = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupons`;
-      // this.$http.get(url, vm.tempProduct).then((response) => {
-      //   vm.coupons = response.data.coupons;
-      //   console.log(response);
-      // });
       this.$store.commit(SETLOADING, true);
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupons?page=${page}`;
       this.$http
@@ -129,24 +120,6 @@ export default {
     },
 
     updateCoupon(item) {
-      //   const vm = this;
-      //   if (vm.isNew) {
-      //     const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon`;
-      //     this.$http.post(url, { data: vm.tempCoupon }).then((response) => {
-      //       console.log(response, vm.tempCoupon);
-      //       // $("#couponModal").modal("hide");
-      //       this.getCoupons();
-      //     });
-      //   } else {
-      //     const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${vm.tempCoupon.id}`;
-      //     vm.due_date = new Date(vm.tempCoupon.due_date * 1000);
-      //     this.$http.put(url, { data: vm.tempCoupon }).then((response) => {
-      //       console.log(response);
-      //       // $("#couponModal").modal("hide");
-      //       this.getCoupons();
-      //     });
-      //   }
-      // },
       this.$store.commit(SETLOADING, true);
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupon`;
       let method = "post";
@@ -186,6 +159,49 @@ export default {
         })
         .finally(() => {
           vm.$refs.couponModal.hide();
+          vm.$store.commit(SETLOADING, false);
+        });
+    },
+
+    deleteCoupon(item) {
+      this.$store.commit(SETLOADING, true);
+      const vm = this;
+      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupon/${item.id}`;
+      console.log(item);
+      const confirmResult = confirm(`確定要刪除 ${item.title} 這個優惠券嗎？`);
+      if (!confirmResult) {
+        return;
+      }
+      this.$http
+        .delete(path)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            vm.getCoupons();
+            this.$notify({
+              group: "alert",
+              title: "刪除成功",
+              text: res.data.message,
+              type: "success",
+            });
+          } else {
+            this.$notify({
+              group: "alert",
+              title: "刪除失敗",
+              text: res.data.message,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$notify({
+            group: "alert",
+            title: "刪除失敗",
+            text: err.message,
+            type: "error",
+          });
+        })
+        .finally(() => {
           vm.$store.commit(SETLOADING, false);
         });
     },

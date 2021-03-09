@@ -112,7 +112,7 @@ export default {
     return {
       showModal: false,
       tempCoupon: {
-        due_date: new Date(),
+        due_date: (Date.now() / 1000).toFixed(0),
       },
     };
   },
@@ -137,10 +137,6 @@ export default {
 
   methods: {
     show(item) {
-      if (item.due_date) {
-        this.due_date = item.due_date;
-        delete item.due_date;
-      }
       Object.assign(this.tempCoupon, item);
       console.log(item);
       console.log(this.tempCoupon);

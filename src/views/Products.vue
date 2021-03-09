@@ -211,7 +211,6 @@ export default {
           });
         })
         .finally(() => {
-          vm.$refs.bookModal.hide();
           vm.$store.commit(SETLOADING, false);
         });
     },
