@@ -18,12 +18,14 @@
       placeholder="Search"
       aria-label="Search"
     />
-    <ul class="navbar-nav px-3">
-      <li class="nav-item text-nowrap">
-        <!-- <a class="nav-link" href="#">Sign out</a> -->
+    <ul class="navbar-nav flex-row justify-content-center">
+      <li class="nav-item text-nowrap mx-3">
         <router-link :to="{ name: 'Home' }" class="nav-link">
           回首頁
         </router-link>
+      </li>
+      <li class="nav-item text-nowrap mx-3">
+        <a href="#" @click.prevent="signout" class="nav-link">登出</a>
       </li>
     </ul>
   </nav>
@@ -37,6 +39,40 @@ export default {
     return {
       title: process.env.VUE_APP_TITLE,
     };
+  },
+
+  methods: {
+    signout() {
+      const path = `${process.env.VUE_APP_API_PATH}/logout`;
+      this.$http
+        .post(path)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            this.$router.push({ name: "Home" });
+            this.$notify({
+              group: "alert",
+              title: res.data.message,
+              type: "success",
+            });
+          } else {
+            this.$notify({
+              group: "alert",
+              title: "登出失敗",
+              text: res.data.message,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$notify({
+            group: "alert",
+            title: "登出失敗",
+            text: err.message,
+            type: "error",
+          });
+        });
+    },
   },
 };
 </script>
