@@ -8,7 +8,7 @@
       <button @click="openModal({})" class="btn btn-primary">新增書籍</button>
     </h1>
     <div class="table-responsive">
-      <table class="table table-hover vertical-align">
+      <table class="table table-hover vertical-align bg-white">
         <thead class="thead-light text-center">
           <th>圖片</th>
           <th>書籍類別</th>

@@ -76,13 +76,13 @@ $dark: $gray-800 !default;
 $theme-colors: () !default;
 $theme-colors: map-merge(
   (
-    'primary': $primary,
-    'secondary': $secondary,
-    'success': $success,
+    'primary': #845ec2, // $primary,
+    'secondary': #b39cd0, // $secondary,
+    'success': #00c9a7, // $success,
     'info': $info,
     'warning': $warning,
-    'danger': $danger,
-    'light': $light,
+    'danger': #e784ff, // $danger,
+    'light': #EEF2F6, // $light,
     'dark': $dark,
   ),
   $theme-colors
@@ -158,6 +158,7 @@ $sizes: () !default;
 $sizes: map-merge(
   (
     25: 25%,
+    30: 30%,
     50: 50%,
     75: 75%,
     100: 100%,
