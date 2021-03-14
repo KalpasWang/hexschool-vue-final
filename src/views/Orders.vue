@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table class="table mt-4">
+    <table class="table shadow-sm bg-white mt-4">
       <thead>
         <tr>
           <th>購買時間</th>
@@ -35,8 +35,8 @@
       </tbody>
     </table>
 
-    <!-- <Pagination :pages="pagination" @emitPages="getOrders"></Pagination> -->
     <Pagination
+      v-if="totalPages > 1"
       class="mt-5"
       :pages="totalPages"
       :current="currentPage"

@@ -17,7 +17,7 @@
       </h6>
       <ul class="nav flex-column text-left ml-3">
         <li class="nav-item">
-          <router-link :to="{ name: 'Products' }" class="nav-link">
+          <router-link :to="{ name: 'ProductsList' }" class="nav-link">
             <book-icon size="1.5x"></book-icon>
             產品列表
           </router-link>

@@ -1,14 +1,14 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard min-h100">
     <NavBar />
-    <div class="container-fluid">
+    <div class="container-fluid min-h100">
       <div class="row">
         <SideBar />
         <main
           role="main"
-          class="col-md-9 bg-light ml-sm-auto col-lg-10 px-md-4"
+          class="col-md-9 bg-light ml-sm-auto flex-grow-1 col-lg-10 px-md-4"
         >
-          <router-view></router-view>
+          <router-view class="min-h100"></router-view>
         </main>
       </div>
     </div>
@@ -60,6 +60,10 @@ body {
   width: 16px;
   height: 16px;
   vertical-align: text-bottom;
+}
+
+.min-h100 {
+  min-height: calc(100vh - 48px);
 }
 
 /*
