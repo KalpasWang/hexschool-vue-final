@@ -1,6 +1,10 @@
 <template>
   <div class="container p-4">
-    <div class="row p-3 shadow-sm bg-white">
+    <div
+      v-cloak
+      v-show="product.id === $route.params.id"
+      class="row p-3 shadow-sm bg-white"
+    >
       <div class="col-md-3">
         <img :src="product.image" class="w-100" alt="product image" />
       </div>
@@ -9,13 +13,23 @@
           <h2 class="text-left">{{ product.title }}</h2>
           <p class="text-left">{{ product.category }}</p>
           <div class="buttons d-flex justify-content-end mt-5 p-2">
-            <button class="btn btn-info rounded-pill mr-2">免費試閱</button>
+            <router-link
+              v-if="product.id"
+              :to="{ name: 'Preview', params: { id: product.id } }"
+              class="btn btn-info rounded-pill mr-2"
+            >
+              免費試閱
+            </router-link>
             <button
               v-if="product.origin_price && product.price"
               class="btn btn-primary rounded-pill"
             >
-              購物去：<del>{{ product.origin_price | currency }}</del>
-              {{ product.price | currency }}
+              購物去：<del class="text-light">{{
+                product.origin_price | currency
+              }}</del>
+              <span class="h5">
+                {{ product.price | currency }}
+              </span>
             </button>
             <button
               v-else-if="product.price"
@@ -32,7 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="pt-5 col-12 text-left">
+      <div v-if="product.description" class="pt-5 col-12 text-left">
         <h4 class="text-left mb-3">書籍簡介</h4>
         <pre class="description h6 font-weight-normal">{{
           product.description
@@ -68,5 +82,10 @@ export default {
 
 .description {
   white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+[v-cloak] {
+  display: none;
 }
 </style>

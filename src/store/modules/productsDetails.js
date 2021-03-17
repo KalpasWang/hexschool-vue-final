@@ -14,8 +14,8 @@ export default {
     productDetails(state) {
       return state.productDetails;
     },
-    productDetailsErrotMsg(state) {
-      return state.productDetailsErrotMsg;
+    productDetailsErrorMsg(state) {
+      return state.productDetailsErrorMsg;
     },
   },
 

@@ -7,6 +7,8 @@ import axios from 'axios';
 import Notifications from 'vue-notification';
 import currencyFilter from './filters/currency';
 import dateFilter from './filters/date';
+import '@/assets/scss/icon.css';
+import '@/assets/scss/global.sass';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;

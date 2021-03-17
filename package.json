@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "core-js": "^3.6.5",
+    "epubjs": "^0.3.88",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.4",
     "vue-feather-icons": "^5.1.0",
