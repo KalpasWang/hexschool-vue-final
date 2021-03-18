@@ -38,8 +38,12 @@ export default {
     EBookMenuBar,
     EBookTitleBar,
   },
+
   data() {
     return {
+      book: null,
+      rendition: null,
+      locations: null,
       ifTitleAndMenuShow: false,
       fontSizeList: [
         { fontSize: 12 },
@@ -50,7 +54,8 @@ export default {
         { fontSize: 22 },
         { fontSize: 24 },
       ],
-      defaultFontSize: 16,
+      defaultFontSize: 20,
+      themes: null,
       themeList: [
         {
           name: "default",
@@ -58,15 +63,6 @@ export default {
             body: {
               color: "#000",
               background: "#fff",
-            },
-          },
-        },
-        {
-          name: "eye",
-          style: {
-            body: {
-              color: "#000",
-              background: "#ceeaba",
             },
           },
         },
@@ -95,6 +91,7 @@ export default {
       navigation: {},
     };
   },
+
   methods: {
     // 目录链接跳转
     jumpTo(href) {
@@ -117,13 +114,20 @@ export default {
       this.rendition.display(location);
     },
     setTheme(index) {
-      this.themes.select(this.themeList[index].name);
+      // this.themes.select(this.themeList[index].name);
+      const theme = this.themeList[index];
+      this.rendition.themes.override("color", theme.style.body.color, true);
+      this.rendition.themes.override(
+        "background",
+        theme.style.body.background,
+        true
+      );
       this.defaultTheme = index;
     },
     registerTheme() {
-      this.themeList.forEach((theme) => {
-        this.themes.register(theme.name, theme.style);
-      });
+      // this.themeList.forEach((theme) => {
+      //   this.rendition.themes.register(theme.name, theme.style);
+      // });
     },
     setFontSize(fontSize) {
       this.defaultFontSize = fontSize;
@@ -138,8 +142,7 @@ export default {
       }
     },
     prevPage() {
-      this.ifTitleAndMenuShow = true;
-      this.$refs.menuBar.showSetting(2);
+      this.ifTitleAndMenuShow = false;
       if (this.rendition) {
         this.rendition.prev().then(() => {
           // 点击上一页,控制进度条变化
@@ -154,9 +157,8 @@ export default {
       }
     },
     nextPage() {
+      this.ifTitleAndMenuShow = false;
       if (this.rendition) {
-        this.ifTitleAndMenuShow = true;
-        this.$refs.menuBar.showSetting(2);
         this.rendition.next().then(() => {
           // 点击上一页,控制进度条变化
           if (this.locations) {
@@ -202,6 +204,7 @@ export default {
       // console.log(this.book.locations);
     },
   },
+
   mounted() {
     const html = document.querySelector("html");
     let fontSize = window.innerWidth / 10;
@@ -210,28 +213,26 @@ export default {
     this.showEpub();
   },
 };
-
-// document.addEventListener('DOMContentLoaded',() => {
-//   const html = document.querySelector('html')
-//   let fontSize = window.innerWidth / 10
-//   fontSize = fontSize > 50 ? 50 : fontSize
-//   html.style.fontSize = fontSize + 'px'
-// });
 </script>
 
 <style scoped lang="sass">
 @import "@/assets/scss/global"
 .ebook
   position: relative
+  overflow: hidden
   .read-wrapper
+    width: 100%
+    height: 100%
     .mask
       position: absolute
       top: 0
       left: 0
+      right: 0
+      bottom: 0
       z-index: 100
       display: flex
-      width: 100%
-      height: 100%
+      // width: 100%
+      // height: 100%
       .left
         height: 100%
         flex: 0 0 px2rem(100)

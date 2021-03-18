@@ -21,10 +21,10 @@
       </div>
     </transition>
     <transition name="slide-up">
-      <div class="setting-wrapper" v-show="ifSettingShow">
+      <div class="setting-wrapper" v-show="ifTitleAndMenuShow && ifSettingShow">
         <div
           class="setting-font-size"
-          v-if="showTag === 0"
+          v-show="showTag === 0"
           :fontSizeList="fontSizeList"
         >
           <div
@@ -58,7 +58,7 @@
             A
           </div>
         </div>
-        <div class="setting-theme" v-else-if="showTag === 1">
+        <div class="setting-theme" v-show="showTag === 1">
           <div
             class="setting-theme-item"
             v-for="(item, index) in themeList"
@@ -75,7 +75,7 @@
             </div>
           </div>
         </div>
-        <div class="setting-progress" v-else-if="showTag === 2">
+        <div class="setting-progress" v-show="showTag === 2">
           <div class="progress-wrapper">
             <input
               class="progress"
@@ -91,7 +91,7 @@
             />
           </div>
           <div class="text-wrapper">
-            <span>{{ bookAvailable ? progress + "%" : "加载中..." }}</span>
+            <span>{{ bookAvailable ? progress + "%" : "讀取中..." }}</span>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default {
     },
     onProgressInput(progress) {
       this.progress = progress;
-      this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`;
+      this.$refs.progress.style.backgroundSize = `${this.progress % 100}%`;
     },
     onProgressChange(progress) {
       this.$emit("onProgressChange", progress);
@@ -179,6 +179,10 @@ export default {
 <style scoped lang="sass">
 @import "@/assets/scss/global"
 .menu-bar
+  position: absolute
+  bottom: 0
+  left: 0
+  right: 0
   .menu-wrapper
     position: absolute
     bottom: 0
