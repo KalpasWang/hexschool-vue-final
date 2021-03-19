@@ -146,6 +146,7 @@ export default {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow;
       if (!this.ifTitleAndMenuShow) {
         this.$refs.menuBar.hideSetting();
+        this.$refs.menuBar.hideContent();
       }
     },
     prevPage() {
@@ -220,10 +221,8 @@ export default {
   },
 
   mounted() {
-    const html = document.querySelector("html");
-    // let fontSize = window.innerWidth / 10;
-    // fontSize = fontSize > 50 ? 50 : fontSize;
-    html.style.fontSize = "44px";
+    // const html = document.querySelector("html");
+    // html.style.fontSize = "44px";
     this.showEpub();
   },
 

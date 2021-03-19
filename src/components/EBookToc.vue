@@ -1,8 +1,7 @@
 <template>
   <transition name="slide-right">
     <div class="content">
-      <div class="content-wrapper" v-if="bookAvailable">
-        <h5>目錄</h5>
+      <div class="content-wrapper shadow" v-if="bookAvailable">
         <div
           class="content-item"
           v-for="(item, index) in navigation.toc"
@@ -44,22 +43,22 @@ export default {
     z-index: 102
     display: flex
     flex-direction: column
-    width: 100%
+    width: 75%
     height: 100%
     background: white
     h5
       @include center
       padding-top: px2rem(10)
       font-size: px2rem(20)
-      .content-item
-        flex: 1
+    .content-item
+      flex: 1
+      width: 100%
+      // height: px2rem(10)
+      // line-height: px2rem(10)
+      // padding-left: px2rem(15)
+      .text
         width: 100%
-        height: px2rem(10)
-        line-height: px2rem(10)
-        padding-left: px2rem(15)
-        .text
-          width: 100%
-          color: #333
-          cursor: pointer
-          font-size: px2rem(10)
+        color: #333
+        cursor: pointer
+        font-size: 20px
 </style>

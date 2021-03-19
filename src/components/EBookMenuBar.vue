@@ -2,7 +2,7 @@
   <div class="menu-bar">
     <transition name="slide-up">
       <div
-        class="menu-wrapper"
+        class="menu-wrapper py-2"
         :class="{ 'hide-box-shadow': ifSettingShow || !ifTitleAndMenuShow }"
         v-show="ifTitleAndMenuShow"
       >
@@ -179,10 +179,6 @@ export default {
 <style scoped lang="sass">
 @import "@/assets/scss/global"
 .menu-bar
-  position: absolute
-  bottom: 0
-  left: 0
-  right: 0
   .menu-wrapper
     position: absolute
     bottom: 0
@@ -190,7 +186,7 @@ export default {
     z-index: 101
     display: flex
     width: 100%
-    height: px2rem(48)
+    // height: px2rem(48)
     background: white
     box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15)
     &.hide-box-shadow
@@ -198,10 +194,12 @@ export default {
     .icon-wrapper
       flex: 1
       @include center()
-      .icon-progress
-        font-size: px2rem(28)
-      .icon-bright
-        font-size: px2rem(24)
+      .icon
+        font-size: 44px
+      // .icon-progress
+      //   font-size: px2rem(28)
+      // .icon-bright
+      //   font-size: px2rem(24)
   .setting-wrapper
     position: absolute
     bottom: px2rem(48)

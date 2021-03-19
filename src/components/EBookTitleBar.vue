@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-down">
-    <div class="title-wrapper" v-show="ifTitleAndMenuShow">
+    <div class="title-wrapper py-2" v-show="ifTitleAndMenuShow">
       <div class="left">
         <div class="icon-wrapper">
           <span class="icon-back icon"></span>
@@ -43,7 +43,7 @@ export default {
     z-index: 101
     display: flex
     width: 100%
-    height: px2rem(48)
+    // height: px2rem(48)
     background: white
     box-shadow: 0 px2rem(8) px2rem(8) rgba(0, 0, 0, .15)
     .left
@@ -54,4 +54,6 @@ export default {
       justify-content: flex-end
       .icon-wrapper
         flex: 0 0 px2rem(40)
+        .icon
+          font-size: 44px
 </style>
