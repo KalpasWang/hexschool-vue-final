@@ -1,32 +1,41 @@
 <template>
-  <div class="ebook">
-    <e-book-title-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" />
-    <div class="read-wrapper">
-      <div id="read"></div>
-      <div class="mask">
-        <div class="left" @click="prevPage"></div>
-        <div class="center" @click="toggleTitleAndMenu"></div>
-        <div class="right" @click="nextPage"></div>
-      </div>
+  <div class="ebook container-fluid">
+    <div
+      v-if="errorMsg.length > 0"
+      class="error d-flex justify-content-center align-items-center"
+    >
+      {{ errorMsg }}
     </div>
-    <e-book-menu-bar
-      :ifTitleAndMenuShow="ifTitleAndMenuShow"
-      :fontSizeList="fontSizeList"
-      :defaultFontSize="defaultFontSize"
-      @setFontSize="setFontSize"
-      :themeList="themeList"
-      :defaultTheme="defaultTheme"
-      @setTheme="setTheme"
-      :bookAvailable="bookAvailable"
-      @onProgressChange="onProgressChange"
-      :navigation="navigation"
-      @jumpTo="jumpTo"
-      ref="menuBar"
-    />
+    <div class="row">
+      <e-book-title-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" />
+      <div class="read-wrapper">
+        <div id="read"></div>
+        <div class="mask">
+          <div class="left" @click="prevPage"></div>
+          <div class="center" @click="toggleTitleAndMenu"></div>
+          <div class="right" @click="nextPage"></div>
+        </div>
+      </div>
+      <e-book-menu-bar
+        :ifTitleAndMenuShow="ifTitleAndMenuShow"
+        :fontSizeList="fontSizeList"
+        :defaultFontSize="defaultFontSize"
+        @setFontSize="setFontSize"
+        :themeList="themeList"
+        :defaultTheme="defaultTheme"
+        @setTheme="setTheme"
+        :bookAvailable="bookAvailable"
+        @onProgressChange="onProgressChange"
+        :navigation="navigation"
+        @jumpTo="jumpTo"
+        ref="menuBar"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import { SETLOADING } from "@/store/modules/mutation-types";
 import EBookTitleBar from "@/components/EBookTitleBar";
 import EBookMenuBar from "@/components/EBookMenuBar";
 import Epub from "epubjs";
@@ -44,7 +53,10 @@ export default {
       book: null,
       rendition: null,
       locations: null,
+      navigation: null,
       ifTitleAndMenuShow: false,
+      errorMsg: "",
+      bookAvailable: false,
       fontSizeList: [
         { fontSize: 12 },
         { fontSize: 14 },
@@ -55,10 +67,11 @@ export default {
         { fontSize: 24 },
       ],
       defaultFontSize: 20,
+      defaultTheme: 0,
       themes: null,
       themeList: [
         {
-          name: "default",
+          name: "light",
           style: {
             body: {
               color: "#000",
@@ -85,28 +98,22 @@ export default {
           },
         },
       ],
-      defaultTheme: 0,
-      // 图书是否是可用状态
-      bookAvailable: false,
-      navigation: {},
     };
   },
 
   methods: {
-    // 目录链接跳转
+    // 跳轉到指定的位置
     jumpTo(href) {
       this.rendition.display(href);
       this.hideTitleAndMenuShow();
     },
     hideTitleAndMenuShow() {
-      // 隐藏标题栏和菜单栏
       this.ifTitleAndMenuShow = false;
-      // 隐藏菜单弹出的设置栏
       this.$refs.menuBar.hideSetting();
-      // 隐藏目录
+      // 隱藏目錄
       this.$refs.menuBar.hideContent();
     },
-    // 进度条的数值 (0-100)
+    // progress bar 的數值 (0-100)
     onProgressChange(progress) {
       const percentage = progress / 100;
       const location =
@@ -125,9 +132,9 @@ export default {
       this.defaultTheme = index;
     },
     registerTheme() {
-      // this.themeList.forEach((theme) => {
-      //   this.rendition.themes.register(theme.name, theme.style);
-      // });
+      this.themeList.forEach((theme) => {
+        this.rendition.themes.register(theme.name, theme.style);
+      });
     },
     setFontSize(fontSize) {
       this.defaultFontSize = fontSize;
@@ -145,7 +152,7 @@ export default {
       this.ifTitleAndMenuShow = false;
       if (this.rendition) {
         this.rendition.prev().then(() => {
-          // 点击上一页,控制进度条变化
+          // 控制 progress bar 往後
           if (this.locations) {
             const currentLocation = this.rendition.currentLocation();
             let progress = Math.ceil(
@@ -160,7 +167,7 @@ export default {
       this.ifTitleAndMenuShow = false;
       if (this.rendition) {
         this.rendition.next().then(() => {
-          // 点击上一页,控制进度条变化
+          // 控制 progress bar 往前
           if (this.locations) {
             const currentLocation = this.rendition.currentLocation();
             let progress = Math.ceil(
@@ -171,27 +178,29 @@ export default {
         });
       }
     },
-    // 电子书的解析和渲染
+    resizeEpub() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      this.rendition.resize(width, height);
+      // this.rendition.destroy();
+      // this.showEpub();
+    },
+    // 渲染 epub 檔案
     showEpub() {
+      this.$store.commit(SETLOADING, true);
       // 生成 Ebook
       this.book = new Epub(DOWNLOAD_URL);
       // 生成 Rendtion
       this.rendition = this.book.renderTo("read", {
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: "calc(100% - 15px)",
+        height: "100vh",
       });
-      // 通过 Rendtion.display 渲染电子书
       this.rendition.display();
-      // 获取 Theme 对象
       this.themes = this.rendition.themes;
-      // 设置默认字体
       this.setFontSize(this.defaultFontSize);
-      // this.themes.register(name, styles)
-      // this.themes.select(name)
-      this.registerTheme();
+      // this.registerTheme();
       this.setTheme(this.defaultTheme);
-      // 获取 Locations 对象
-      // 通过 epubjs 的钩子函数来实现
+      // 產生 epub 的 位置與導覽物件
       this.book.ready
         .then((chars) => {
           return this.book.locations.generate(chars);
@@ -199,18 +208,27 @@ export default {
         .then(() => {
           this.navigation = this.book.navigation;
           this.locations = this.book.locations;
+          window.addEventListener("resize", this.resizeEpub);
           this.bookAvailable = true;
+          this.$store.commit(SETLOADING, false);
+        })
+        .catch(() => {
+          this.$store.commit(SETLOADING, false);
+          this.errorMsg = "對不起，目前無法閱覽";
         });
-      // console.log(this.book.locations);
     },
   },
 
   mounted() {
     const html = document.querySelector("html");
-    let fontSize = window.innerWidth / 10;
-    fontSize = fontSize > 50 ? 50 : fontSize;
-    html.style.fontSize = fontSize + "px";
+    // let fontSize = window.innerWidth / 10;
+    // fontSize = fontSize > 50 ? 50 : fontSize;
+    html.style.fontSize = "44px";
     this.showEpub();
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.resizeEpub);
   },
 };
 </script>
@@ -220,6 +238,13 @@ export default {
 .ebook
   position: relative
   overflow: hidden
+  .error
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    z-index: 100
   .read-wrapper
     width: 100%
     height: 100%
