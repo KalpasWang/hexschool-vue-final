@@ -2,18 +2,18 @@
   <div class="ebook container-fluid">
     <div
       v-if="errorMsg.length > 0"
-      class="error d-flex justify-content-center align-items-center"
+      class="ebook__error d-flex justify-content-center align-items-center"
     >
       {{ errorMsg }}
     </div>
     <div class="row">
       <e-book-title-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" />
-      <div class="read-wrapper">
+      <div class="ebook__wrapper">
         <div id="read"></div>
-        <div class="mask">
-          <div class="left" @click="prevPage"></div>
-          <div class="center" @click="toggleTitleAndMenu"></div>
-          <div class="right" @click="nextPage"></div>
+        <div class="ebook__mask">
+          <div class="ebook__left-area" @click="prevPage"></div>
+          <div class="ebook__center-area" @click="toggleTitleAndMenu"></div>
+          <div class="ebook__right-area" @click="nextPage"></div>
         </div>
       </div>
       <e-book-menu-bar
@@ -232,38 +232,48 @@ export default {
 };
 </script>
 
-<style scoped lang="sass">
-@import "@/assets/scss/global"
-.ebook
-  position: relative
-  overflow: hidden
-  .error
-    position: absolute
-    top: 0
-    bottom: 0
-    left: 0
-    right: 0
-    z-index: 100
-  .read-wrapper
-    width: 100%
-    height: 100%
-    .mask
-      position: absolute
-      top: 0
-      left: 0
-      right: 0
-      bottom: 0
-      z-index: 100
-      display: flex
-      // width: 100%
-      // height: 100%
-      .left
-        height: 100%
-        flex: 0 0 px2rem(100)
-      .center
-        height: 100%
-        flex: 1
-      .right
-        height: 100%
-        flex: 0 0 px2rem(100)
+<style scoped lang="scss">
+.ebook {
+  position: relative;
+  overflow: hidden;
+
+  &__error {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+  }
+
+  &__wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    display: flex;
+  }
+
+  &__left-area {
+    height: 100%;
+    flex: 0 0 2.5rem;
+  }
+
+  &__center-area {
+    height: 100%;
+    flex: 1;
+  }
+
+  &__right-area {
+    height: 100%;
+    flex: 0 0 2.5rem;
+  }
+}
 </style>

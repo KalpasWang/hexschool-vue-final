@@ -1,63 +1,46 @@
 <template>
-  <div class="menu-bar">
-    <transition name="slide-up">
+  <transition name="slide-up">
+    <div class="menu-bar z-200" v-show="ifTitleAndMenuShow">
+      <!-- 設定選單 -->
       <div
-        class="menu-wrapper py-2"
-        :class="{ 'hide-box-shadow': ifSettingShow || !ifTitleAndMenuShow }"
-        v-show="ifTitleAndMenuShow"
+        class="z-200 bg-white w-100 shadow-sm"
+        v-show="ifTitleAndMenuShow && ifSettingShow"
       >
-        <div class="icon-wrapper">
-          <span class="icon-menu icon" @click="showSetting(3)"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-progress icon" @click="showSetting(2)"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-bright icon" @click="showSetting(1)"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-a icon" @click="showSetting(0)">A</span>
-        </div>
-      </div>
-    </transition>
-    <transition name="slide-up">
-      <div class="setting-wrapper" v-show="ifTitleAndMenuShow && ifSettingShow">
+        <!-- 設定文字大小 -->
         <div
-          class="setting-font-size"
+          class="flex-center p-2"
           v-show="showTag === 0"
           :fontSizeList="fontSizeList"
         >
           <div
-            class="preview"
-            :style="{ fontSize: fontSizeList[0].fontSize + 'px' }"
+            class="flex-center align-middle px-2"
+            :style="{ fontSize: inputText.min + 'px' }"
           >
-            A
-          </div>
-          <div class="select">
-            <div
-              class="select-wrapper"
-              v-for="(item, index) in fontSizeList"
-              :key="index"
-              @click="setFontSize(item.fontSize)"
-            >
-              <div class="line"></div>
-              <div class="point-wrapper">
-                <div class="point" v-show="defaultFontSize === item.fontSize">
-                  <div class="small-point"></div>
-                </div>
-              </div>
-              <div class="line"></div>
-            </div>
+            字
           </div>
           <div
-            class="preview"
-            :style="{
-              fontSize: fontSizeList[fontSizeList.length - 1].fontSize + 'px',
-            }"
+            class="flex-center align-middle pr-4"
+            :style="{ fontSize: inputText.max + 'px' }"
           >
-            A
+            字
+          </div>
+          <div class="d-flex flex-grow-1 mx-3">
+            <div class="flex-center flex-grow-1">
+              <input
+                type="range"
+                class="form-control-range mb-0"
+                :max="inputText.max"
+                :min="inputText.min"
+                step="1"
+                v-model="inputText.size"
+              />
+              <label class="text-lg mb-0 align-middle ml-3">
+                {{ inputText.size }}
+              </label>
+            </div>
           </div>
         </div>
+        <!-- 設定背景主題 -->
         <div class="setting-theme" v-show="showTag === 1">
           <div
             class="setting-theme-item"
@@ -75,6 +58,7 @@
             </div>
           </div>
         </div>
+        <!-- 設定進度 -->
         <div class="setting-progress" v-show="showTag === 2">
           <div class="progress-wrapper">
             <input
@@ -95,37 +79,84 @@
           </div>
         </div>
       </div>
-    </transition>
-    <e-book-toc
-      :ifShowContent="ifShowContent"
-      v-show="ifShowContent"
-      :navigation="navigation"
-      :bookAvailable="bookAvailable"
-      @jumpTo="jumpTo"
-    />
-    <transition name="fade">
+
+      <!-- 主選單 -->
       <div
-        class="content-mask"
+        class="z-200 d-flex bg-light w-100 shadow-sm"
+        v-show="ifTitleAndMenuShow"
+      >
+        <!-- 目錄按鈕 -->
+        <div
+          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          @click="showSetting(3)"
+        >
+          <menu-icon class="icon-lg" size="4x"></menu-icon>
+        </div>
+        <!-- 進度條按鈕 -->
+        <div
+          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          @click="showSetting(2)"
+        >
+          <git-commit-icon class="icon-lg" size="4x"></git-commit-icon>
+        </div>
+        <!-- 背景主題按鈕 -->
+        <div
+          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          @click="showSetting(1)"
+        >
+          <sun-icon class="icon-lg" size="4x"></sun-icon>
+        </div>
+        <!-- 文字大小按鈕 -->
+        <div
+          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          @click="showSetting(0)"
+        >
+          <type-icon class="icon-lg" size="4x"></type-icon>
+        </div>
+      </div>
+
+      <e-book-toc
+        :ifShowContent="ifShowContent"
         v-show="ifShowContent"
-        @click="hideContent"
-      ></div>
-    </transition>
-  </div>
+        :navigation="navigation"
+        :bookAvailable="bookAvailable"
+        @jumpTo="jumpTo"
+      />
+      <transition name="fade">
+        <div
+          class="content-mask"
+          v-show="ifShowContent"
+          @click="hideContent"
+        ></div>
+      </transition>
+    </div>
+  </transition>
 </template>
 
 <script>
 import EBookToc from "@/components/EBookToc";
+import { MenuIcon, GitCommitIcon, SunIcon, TypeIcon } from "vue-feather-icons";
+
 export default {
   name: "EBookMenuBar",
   components: {
     EBookToc,
+    MenuIcon,
+    GitCommitIcon,
+    SunIcon,
+    TypeIcon,
   },
   data() {
     return {
       ifSettingShow: false,
+      ifShowContent: false,
       showTag: 0,
       progress: 0,
-      ifShowContent: false,
+      inputText: {
+        min: 16,
+        max: 36,
+        size: this.defaultFontSize,
+      },
     };
   },
   props: {
@@ -176,8 +207,15 @@ export default {
 };
 </script>
 
-<style scoped lang="sass">
-@import "@/assets/scss/global"
+<style lang="scss" scoped>
+.menu-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+</style>
+
 .menu-bar
   .menu-wrapper
     position: absolute
@@ -186,9 +224,7 @@ export default {
     z-index: 101
     display: flex
     width: 100%
-    // height: px2rem(48)
     background: white
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15)
     &.hide-box-shadow
       box-shadow: none
     .icon-wrapper
@@ -326,4 +362,3 @@ export default {
       width: 100%
       height: 100%
       background: rgba(51, 51, 51, .8)
-</style>

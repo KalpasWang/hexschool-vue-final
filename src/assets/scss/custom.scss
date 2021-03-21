@@ -1,0 +1,47 @@
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-lg {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+.text-lg {
+  font-size: 1.5rem !important;
+}
+
+.z-100 {
+  z-index: 100;
+}
+
+.z-200 {
+  z-index: 200;
+}
+
+.z-300 {
+  z-index: 300;
+}
+
+.z-900 {
+  z-index: 900;
+}
+
+.z-1000 {
+  z-index: 1000;
+}
+
+// vue transition
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.3s linear;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.slide-up-enter,
+.slide-up-leave-to {
+  max-height: 100%;
+}
