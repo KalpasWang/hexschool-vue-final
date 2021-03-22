@@ -1,17 +1,16 @@
 <template>
   <transition name="slide-right">
-    <div class="content">
-      <div class="content-wrapper shadow" v-if="bookAvailable">
-        <div
-          class="content-item"
+    <div class="toc-wrapper w-75 bg-light shadow" v-show="ifShowContent">
+      <ul class="list-group" v-if="navigation.toc">
+        <li
+          class="list-group-item"
           v-for="(item, index) in navigation.toc"
           :key="index"
           @click="jumpTo(item.href)"
         >
-          <span class="text">{{ item.label }}</span>
-        </div>
-      </div>
-      <div class="empty" v-else>讀取中...</div>
+          <span class="">{{ item.label }}</span>
+        </li>
+      </ul>
     </div>
   </transition>
 </template>
@@ -33,32 +32,12 @@ export default {
 };
 </script>
 
-<style scoped lang="sass">
-@import "@/assets/scss/global"
-.content
-  .content-wrapper
-    position: absolute
-    bottom: 0
-    left: 0
-    z-index: 102
-    display: flex
-    flex-direction: column
-    width: 75%
-    height: 100%
-    background: white
-    h5
-      @include center
-      padding-top: px2rem(10)
-      font-size: px2rem(20)
-    .content-item
-      flex: 1
-      width: 100%
-      // height: px2rem(10)
-      // line-height: px2rem(10)
-      // padding-left: px2rem(15)
-      .text
-        width: 100%
-        color: #333
-        cursor: pointer
-        font-size: 20px
+<style scoped lang="scss">
+.toc-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
 </style>

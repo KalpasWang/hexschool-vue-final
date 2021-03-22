@@ -1,30 +1,27 @@
 <template>
   <transition name="slide-up">
-    <div class="menu-bar z-200" v-show="ifTitleAndMenuShow">
+    <div
+      class="menu-bar container-md px-0 shadow z-200"
+      v-show="ifTitleAndMenuShow"
+    >
       <!-- 設定選單 -->
       <div
-        class="z-200 bg-white w-100 shadow-sm"
+        class="z-200 bg-light w-100"
         v-show="ifTitleAndMenuShow && ifSettingShow"
       >
         <!-- 設定文字大小 -->
-        <div
-          class="flex-center p-2"
-          v-show="showTag === 0"
-          :fontSizeList="fontSizeList"
-        >
+        <div class="flex-center p-3" v-if="showTag === 0">
           <div
-            class="flex-center align-middle px-2"
-            :style="{ fontSize: inputText.min + 'px' }"
+            class="flex-center align-middle pr-2"
+            :style="{
+              fontSize: inputText.size + 'px',
+              width: '60px',
+              height: '60px',
+            }"
           >
-            字
+            文
           </div>
-          <div
-            class="flex-center align-middle pr-4"
-            :style="{ fontSize: inputText.max + 'px' }"
-          >
-            字
-          </div>
-          <div class="d-flex flex-grow-1 mx-3">
+          <div class="d-flex flex-grow-1">
             <div class="flex-center flex-grow-1">
               <input
                 type="range"
@@ -41,28 +38,35 @@
           </div>
         </div>
         <!-- 設定背景主題 -->
-        <div class="setting-theme" v-show="showTag === 1">
+        <div class="d-flex pt-2" v-if="showTag === 1">
+          <!-- 排列背景顏色 -->
           <div
-            class="setting-theme-item"
+            class="flex-grow-1 d-flex flex-column"
             v-for="(item, index) in themeList"
             :key="index"
             @click="setTheme(index)"
           >
             <div
-              class="preview"
+              class="theme-box border rounded-lg flex-grow-1 pb-6 mx-2"
+              :class="{ 'border-primary': index === defaultTheme }"
               :style="{ background: item.style.body.background }"
-              :class="{ 'no-border': item.style.body.background !== '#fff' }"
             ></div>
-            <div class="text" :class="{ selected: index === defaultTheme }">
-              {{ item.name }}
+            <div
+              class="flex-center text-center text-md"
+              :class="{
+                'text-primary font-weight-bold': index === defaultTheme,
+              }"
+            >
+              <span>{{ item.name }}</span>
+              <check-icon v-if="index === defaultTheme" size="4x"></check-icon>
             </div>
           </div>
         </div>
         <!-- 設定進度 -->
-        <div class="setting-progress" v-show="showTag === 2">
-          <div class="progress-wrapper">
+        <div class="d-flex p-3" v-if="showTag === 2">
+          <div class="flex-center flex-grow-1">
             <input
-              class="progress"
+              class="form-control-range mb-0"
               type="range"
               max="100"
               min="0"
@@ -74,8 +78,8 @@
               ref="progress"
             />
           </div>
-          <div class="text-wrapper">
-            <span>{{ bookAvailable ? progress + "%" : "讀取中..." }}</span>
+          <div class="text-lg align-middle ml-3">
+            <span>{{ progress + "%" }}</span>
           </div>
         </div>
       </div>
@@ -115,6 +119,7 @@
         </div>
       </div>
 
+      <!-- 目錄物件 -->
       <e-book-toc
         :ifShowContent="ifShowContent"
         v-show="ifShowContent"
@@ -122,20 +127,19 @@
         :bookAvailable="bookAvailable"
         @jumpTo="jumpTo"
       />
-      <transition name="fade">
-        <div
-          class="content-mask"
-          v-show="ifShowContent"
-          @click="hideContent"
-        ></div>
-      </transition>
     </div>
   </transition>
 </template>
 
 <script>
 import EBookToc from "@/components/EBookToc";
-import { MenuIcon, GitCommitIcon, SunIcon, TypeIcon } from "vue-feather-icons";
+import {
+  MenuIcon,
+  GitCommitIcon,
+  SunIcon,
+  TypeIcon,
+  CheckIcon,
+} from "vue-feather-icons";
 
 export default {
   name: "EBookMenuBar",
@@ -145,6 +149,7 @@ export default {
     GitCommitIcon,
     SunIcon,
     TypeIcon,
+    CheckIcon,
   },
   data() {
     return {
@@ -214,151 +219,12 @@ export default {
   right: 0;
   bottom: 0;
 }
-</style>
 
-.menu-bar
-  .menu-wrapper
-    position: absolute
-    bottom: 0
-    left: 0
-    z-index: 101
-    display: flex
-    width: 100%
-    background: white
-    &.hide-box-shadow
-      box-shadow: none
-    .icon-wrapper
-      flex: 1
-      @include center()
-      .icon
-        font-size: 44px
-      // .icon-progress
-      //   font-size: px2rem(28)
-      // .icon-bright
-      //   font-size: px2rem(24)
-  .setting-wrapper
-    position: absolute
-    bottom: px2rem(48)
-    left: 0
-    z-index: 101
-    width: 100%
-    height: px2rem(60)
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15)
-    background: white
-    .setting-font-size
-      display: flex
-      height: 100%
-      .preview
-        flex: 0 0 px2rem(40)
-        @include center
-      .select
-        display: flex
-        flex: 1
-        .select-wrapper
-          flex: 1
-          display: flex
-          align-items: center
-          &:first-child
-            .line
-              &:first-child
-                border-top: none
-            .point-wrapper
-              border-left: none
-          &:last-child
-            .line
-              &:last-child
-                border-top: none
-            .point-wrapper
-              border-left: none
-          .line
-            flex: 1
-            height: 0
-            justify-content: center
-            border-top: px2rem(1) solid #ccc
-          .point-wrapper
-            position: relative
-            flex: 0 0 0
-            width: 0
-            height: px2rem(7)
-            border-left: px2rem(1) solid #ccc
-            .point
-              position: absolute
-              top: px2rem(-8)
-              left: px2rem(-10)
-              width: px2rem(20)
-              height: px2rem(20)
-              border-radius: 50%
-              background: white
-              border: px2rem(1) solid #ccc
-              box-shadow: 0 px2rem(4) px2rem(4) rgba(0, 0, 0, .15)
-              @include center
-              .small-point
-                width: px2rem(5)
-                height: px2rem(5)
-                background: black
-                border-radius: 50%
-    .setting-theme
-      height: 100%
-      display: flex
-      .setting-theme-item
-        flex: 1
-        display: flex
-        flex-direction: column
-        padding: px2rem(5)
-        box-sizing: border-box
-        .preview
-          flex: 1
-          border: px2rem(1) solid #ccc
-          box-sizing: border-box
-          &.no-border
-            border: none
-        .text
-          flex: 0 0 px2rem(20)
-          font-size: px2rem(11)
-          color: #ccc
-          @include center
-          &.selected
-            color: #333
-    .setting-progress
-      position: relative
-      width: 100%
-      height: 100%
-      .progress-wrapper
-        width: 100%
-        height: 100%
-        @include center
-        padding: 0 px2rem(30)
-        box-sizing: border-box
-        .progress
-          width: 100%
-          -webkit-appearance: none
-          outline: none
-          height: px2rem(2)
-          background: -webkit-linear-gradient(#999, #999) no-repeat, #ddd
-          background-size: 0 100%
-          &.focus
-            outline: none
-          &::-webkit-slider-thumb
-            -webkit-appearance: none
-            height: px2rem(20)
-            width: px2rem(20)
-            border-radius: 50%
-            background: white
-            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, .15)
-            border: px2rem(1) solid #ddd
-      .text-wrapper
-        position: absolute
-        width: 100%
-        height: 10%
-        top: px2rem(50)
-        @include center
-        font-size: px2rem(12)
-    .content-mask
-      position: absolute
-      top: 0
-      left: 0
-      z-index: 101
-      display: flex
-      width: 100%
-      height: 100%
-      background: rgba(51, 51, 51, .8)
+.theme-box {
+  border-width: 3px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+</style>
