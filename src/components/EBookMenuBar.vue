@@ -6,7 +6,8 @@
     >
       <!-- 設定選單 -->
       <div
-        class="z-200 bg-light w-100"
+        class="z-200 w-100"
+        :class="backgroundStyle"
         v-show="ifTitleAndMenuShow && ifSettingShow"
       >
         <!-- 設定文字大小 -->
@@ -30,6 +31,7 @@
                 :min="inputText.min"
                 step="1"
                 v-model="inputText.size"
+                @change="setFontSize($event.target.value)"
               />
               <label class="text-lg mb-0 align-middle ml-3">
                 {{ inputText.size }}
@@ -47,9 +49,13 @@
             @click="setTheme(index)"
           >
             <div
-              class="theme-box border rounded-lg flex-grow-1 pb-6 mx-2"
-              :class="{ 'border-primary': index === defaultTheme }"
-              :style="{ background: item.style.body.background }"
+              class="theme-box border rounded-lg flex-grow-1 pb-6 mx-2 btn"
+              :class="{
+                'border-primary': index === defaultTheme,
+                'btn-light': themeList[index].name === 'light',
+                'btn-dark': themeList[index].name === 'dark',
+                'btn-gold': themeList[index].name === 'gold',
+              }"
             ></div>
             <div
               class="flex-center text-center text-md"
@@ -72,10 +78,8 @@
               min="0"
               step="1"
               @change="onProgressChange($event.target.value)"
-              @input="onProgressInput($event.target.value)"
               v-model="progress"
               :disabled="!bookAvailable"
-              ref="progress"
             />
           </div>
           <div class="text-lg align-middle ml-3">
@@ -86,53 +90,48 @@
 
       <!-- 主選單 -->
       <div
-        class="z-200 d-flex bg-light w-100 shadow-sm"
+        class="z-200 d-flex w-100 shadow-sm"
+        :class="backgroundStyle"
         v-show="ifTitleAndMenuShow"
       >
         <!-- 目錄按鈕 -->
         <div
-          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          class="py-2 flex-grow-1 btn btn-lg rounded-0"
+          :class="buttonStyle"
           @click="showSetting(3)"
         >
           <menu-icon class="icon-lg" size="4x"></menu-icon>
         </div>
         <!-- 進度條按鈕 -->
         <div
-          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          class="py-2 flex-grow-1 btn btn-lg rounded-0"
+          :class="buttonStyle"
           @click="showSetting(2)"
         >
           <git-commit-icon class="icon-lg" size="4x"></git-commit-icon>
         </div>
         <!-- 背景主題按鈕 -->
         <div
-          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          class="py-2 flex-grow-1 btn btn-lg rounded-0"
+          :class="buttonStyle"
           @click="showSetting(1)"
         >
           <sun-icon class="icon-lg" size="4x"></sun-icon>
         </div>
         <!-- 文字大小按鈕 -->
         <div
-          class="py-2 flex-grow-1 btn btn-light btn-lg rounded-0"
+          class="py-2 flex-grow-1 btn btn-lg rounded-0"
+          :class="buttonStyle"
           @click="showSetting(0)"
         >
           <type-icon class="icon-lg" size="4x"></type-icon>
         </div>
       </div>
-
-      <!-- 目錄物件 -->
-      <e-book-toc
-        :ifShowContent="ifShowContent"
-        v-show="ifShowContent"
-        :navigation="navigation"
-        :bookAvailable="bookAvailable"
-        @jumpTo="jumpTo"
-      />
     </div>
   </transition>
 </template>
 
 <script>
-import EBookToc from "@/components/EBookToc";
 import {
   MenuIcon,
   GitCommitIcon,
@@ -144,7 +143,6 @@ import {
 export default {
   name: "EBookMenuBar",
   components: {
-    EBookToc,
     MenuIcon,
     GitCommitIcon,
     SunIcon,
@@ -154,9 +152,9 @@ export default {
   data() {
     return {
       ifSettingShow: false,
-      ifShowContent: false,
       showTag: 0,
       progress: 0,
+      theme: null,
       inputText: {
         min: 16,
         max: 36,
@@ -164,12 +162,29 @@ export default {
       },
     };
   },
+  computed: {
+    backgroundStyle() {
+      return {
+        "bg-light": this.theme.name === "light",
+        "bg-dark": this.theme.name === "dark",
+        "bg-gold": this.theme.name === "gold",
+        "text-white": this.theme.name === "dark",
+        "text-black": this.theme.name === "light" || this.theme.name === "gold",
+      };
+    },
+    buttonStyle() {
+      return {
+        "btn-light": this.theme.name === "light",
+        "btn-dark": this.theme.name === "dark",
+        "btn-gold": this.theme.name === "gold",
+      };
+    },
+  },
   props: {
     ifTitleAndMenuShow: {
       type: Boolean,
       default: false,
     },
-    fontSizeList: Array,
     defaultFontSize: Number,
     themeList: Array,
     defaultTheme: Number,
@@ -177,20 +192,18 @@ export default {
     navigation: Object,
   },
   methods: {
-    hideContent() {
-      this.ifShowContent = false;
-    },
     jumpTo(href) {
       this.$emit("jumpTo", href);
     },
-    onProgressInput(progress) {
+    setProgress(progress) {
       this.progress = progress;
-      this.$refs.progress.style.backgroundSize = `${this.progress % 100}%`;
     },
     onProgressChange(progress) {
+      this.progress = +progress;
       this.$emit("onProgressChange", progress);
     },
     setTheme(index) {
+      this.theme = this.themeList[index];
       this.$emit("setTheme", index);
     },
     setFontSize(fontSize) {
@@ -200,7 +213,7 @@ export default {
       this.showTag = tag;
       if (this.showTag === 3) {
         this.ifSettingShow = false;
-        this.ifShowContent = true;
+        this.$emit("showToc");
       } else {
         this.ifSettingShow = true;
       }
@@ -208,6 +221,9 @@ export default {
     hideSetting() {
       this.ifSettingShow = false;
     },
+  },
+  created() {
+    this.theme = this.themeList[this.defaultTheme];
   },
 };
 </script>

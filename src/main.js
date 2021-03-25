@@ -12,6 +12,9 @@ import '@/assets/scss/global.sass';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
+Vue.config.errorHandler = function(err, vm, info) {
+  console.log(err, vm, info);
+};
 Vue.use(VueAxios, axios);
 Vue.use(Notifications);
 Vue.filter('currency', currencyFilter);

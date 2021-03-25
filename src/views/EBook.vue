@@ -2,35 +2,52 @@
   <div class="ebook container-fluid">
     <div
       v-if="errorMsg.length > 0"
-      class="ebook__error d-flex justify-content-center align-items-center"
+      class="ebook__error z-300 bg-white d-flex justify-content-center align-items-center"
     >
       {{ errorMsg }}
     </div>
     <div class="row">
-      <e-book-title-bar :ifTitleAndMenuShow="ifTitleAndMenuShow" />
-      <div class="ebook__wrapper">
+      <e-book-title-bar
+        :ifTitleAndMenuShow="ifTitleAndMenuShow"
+        :title="title"
+        :id="id"
+        :theme="themeList[defaultTheme]"
+      />
+      <div class="w-100 h-100">
         <div id="read"></div>
-        <div class="ebook__mask">
-          <div class="ebook__left-area" @click="prevPage"></div>
-          <div class="ebook__center-area" @click="toggleTitleAndMenu"></div>
-          <div class="ebook__right-area" @click="nextPage"></div>
+        <div class="ebook__mask d-flex z-100">
+          <div class="ebook__left-area h-100" @click="prevPage"></div>
+          <div
+            class="ebook__center-area h-100"
+            @click="toggleTitleAndMenu"
+          ></div>
+          <div class="ebook__right-area h-100" @click="nextPage"></div>
         </div>
       </div>
       <e-book-menu-bar
         :ifTitleAndMenuShow="ifTitleAndMenuShow"
-        :fontSizeList="fontSizeList"
         :defaultFontSize="defaultFontSize"
-        @setFontSize="setFontSize"
         :themeList="themeList"
         :defaultTheme="defaultTheme"
-        @setTheme="setTheme"
         :bookAvailable="bookAvailable"
-        @onProgressChange="onProgressChange"
         :navigation="navigation"
+        @showToc="showToc"
+        @setFontSize="setFontSize"
+        @setTheme="setTheme"
+        @onProgressChange="onProgressChange"
         @jumpTo="jumpTo"
         ref="menuBar"
       />
     </div>
+    <!-- 目錄物件 -->
+    <e-book-toc
+      v-show="ifShowContent"
+      :toc="toc"
+      :navigation="navigation"
+      :theme="themeList[defaultTheme]"
+      :bookAvailable="bookAvailable"
+      @jumpTo="jumpTo"
+    />
   </div>
 </template>
 
@@ -38,15 +55,18 @@
 import { SETLOADING } from "@/store/modules/mutation-types";
 import EBookTitleBar from "@/components/EBookTitleBar";
 import EBookMenuBar from "@/components/EBookMenuBar";
+import EBookToc from "@/components/EBookToc";
 import Epub from "epubjs";
-const DOWNLOAD_URL = "/static/content1.epub";
+const DOWNLOAD_URL = "/static/content3.epub";
 
 export default {
   name: "Ebook",
   components: {
     EBookMenuBar,
     EBookTitleBar,
+    EBookToc,
   },
+  props: ["title", "id"],
 
   data() {
     return {
@@ -54,18 +74,11 @@ export default {
       rendition: null,
       locations: null,
       navigation: null,
+      toc: null,
       ifTitleAndMenuShow: false,
+      ifShowContent: false,
       errorMsg: "",
       bookAvailable: false,
-      fontSizeList: [
-        { fontSize: 12 },
-        { fontSize: 14 },
-        { fontSize: 16 },
-        { fontSize: 18 },
-        { fontSize: 20 },
-        { fontSize: 22 },
-        { fontSize: 24 },
-      ],
       defaultFontSize: 20,
       defaultTheme: 0,
       themes: null,
@@ -75,16 +88,16 @@ export default {
           style: {
             body: {
               color: "#000",
-              background: "#fff",
+              background: "#eef2f6",
             },
           },
         },
         {
-          name: "night",
+          name: "dark",
           style: {
             body: {
-              color: "#fff",
-              background: "#000",
+              color: "#eef2f6",
+              background: "#212529",
             },
           },
         },
@@ -93,7 +106,7 @@ export default {
           style: {
             body: {
               color: "#000",
-              background: "#F1DFCF",
+              background: "#f1dfcf",
             },
           },
         },
@@ -102,6 +115,9 @@ export default {
   },
 
   methods: {
+    showToc() {
+      this.ifShowContent = true;
+    },
     // 跳轉到指定的位置
     jumpTo(href) {
       this.rendition.display(href);
@@ -109,15 +125,17 @@ export default {
     },
     hideTitleAndMenuShow() {
       this.ifTitleAndMenuShow = false;
+      this.ifShowContent = false;
       this.$refs.menuBar.hideSetting();
-      // 隱藏目錄
-      this.$refs.menuBar.hideContent();
     },
     // progress bar 的數值 (0-100)
     onProgressChange(progress) {
       const percentage = progress / 100;
-      const location =
+      let location =
         percentage > 0 ? this.locations.cfiFromPercentage(percentage) : 0;
+      if (percentage === 1) {
+        location = this.locations.cfiFromLocation(this.locations.total - 1);
+      }
       this.rendition.display(location);
     },
     setTheme(index) {
@@ -146,12 +164,14 @@ export default {
       this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow;
       if (!this.ifTitleAndMenuShow) {
         this.$refs.menuBar.hideSetting();
-        this.$refs.menuBar.hideContent();
+        this.ifShowContent = false;
       }
     },
     prevPage() {
       this.ifTitleAndMenuShow = false;
-      if (this.rendition) {
+      if (this.ifShowContent) {
+        this.ifShowContent = false;
+      } else if (this.rendition) {
         this.rendition.prev().then(() => {
           // 控制 progress bar 往後
           if (this.locations) {
@@ -159,14 +179,16 @@ export default {
             let progress = Math.ceil(
               this.locations.percentageFromCfi(currentLocation.start.cfi) * 100
             );
-            this.$refs.menuBar.onProgressInput(progress);
+            this.$refs.menuBar.setProgress(progress);
           }
         });
       }
     },
     nextPage() {
       this.ifTitleAndMenuShow = false;
-      if (this.rendition) {
+      if (this.ifShowContent) {
+        this.ifShowContent = false;
+      } else if (this.rendition) {
         this.rendition.next().then(() => {
           // 控制 progress bar 往前
           if (this.locations) {
@@ -174,7 +196,7 @@ export default {
             let progress = Math.ceil(
               this.locations.percentageFromCfi(currentLocation.start.cfi) * 100
             );
-            this.$refs.menuBar.onProgressInput(progress);
+            this.$refs.menuBar.setProgress(progress);
           }
         });
       }
@@ -183,8 +205,6 @@ export default {
       const width = window.innerWidth;
       const height = window.innerHeight;
       this.rendition.resize(width, height);
-      // this.rendition.destroy();
-      // this.showEpub();
     },
     // 渲染 epub 檔案
     showEpub() {
@@ -203,10 +223,14 @@ export default {
       this.setTheme(this.defaultTheme);
       // 產生 epub 的 位置與導覽物件
       this.book.ready
-        .then((chars) => {
-          return this.book.locations.generate(chars);
+        .then(() => {
+          return this.book.locations.generate();
         })
         .then(() => {
+          return this.book.loaded.navigation;
+        })
+        .then(({ toc }) => {
+          this.toc = toc;
           this.navigation = this.book.navigation;
           this.locations = this.book.locations;
           window.addEventListener("resize", this.resizeEpub);
@@ -215,14 +239,12 @@ export default {
         })
         .catch(() => {
           this.$store.commit(SETLOADING, false);
-          this.errorMsg = "對不起，目前無法閱覽";
+          this.errorMsg = "無法開啟此書";
         });
     },
   },
 
   mounted() {
-    // const html = document.querySelector("html");
-    // html.style.fontSize = "44px";
     this.showEpub();
   },
 
@@ -243,12 +265,6 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 300;
-  }
-
-  &__wrapper {
-    width: 100%;
-    height: 100%;
   }
 
   &__mask {
@@ -257,23 +273,18 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 100;
-    display: flex;
   }
 
   &__left-area {
-    height: 100%;
-    flex: 0 0 2.5rem;
+    flex: 0 0 20%;
   }
 
   &__center-area {
-    height: 100%;
     flex: 1;
   }
 
   &__right-area {
-    height: 100%;
-    flex: 0 0 2.5rem;
+    flex: 0 0 20%;
   }
 }
 </style>

@@ -11,7 +11,6 @@ import OrderingSimulation from '@/views/OrderingSimulation';
 import Products from '@/views/Products';
 import ProductDetails from '@/views/ProductDetails';
 import EBook from '@/views/EBook';
-// import EpubReader from '@/views/EpubReader';
 
 Vue.use(VueRouter);
 
@@ -63,9 +62,10 @@ const routes = [
     ],
   },
   {
-    path: '/preview/:id',
+    path: '/preview/:id-:title',
     name: 'Preview',
     component: EBook,
+    props: true,
   },
   {
     path: '/login',

@@ -1,59 +1,65 @@
 <template>
   <transition name="slide-down">
-    <div class="title-wrapper py-2" v-show="ifTitleAndMenuShow">
-      <div class="left">
-        <div class="icon-wrapper">
-          <span class="icon-back icon"></span>
-        </div>
+    <div
+      class="title-bar container-md px-4 py-3 shadow z-200 flex-start-center"
+      :class="backgroundStyle"
+      v-show="ifTitleAndMenuShow"
+    >
+      <div class="btn p-2 rounded-circle" :class="buttonStyle">
+        <router-link :to="{ name: 'ProductDetails', params: { id: id } }">
+          <arrow-left-icon size="4x" class="icon-lg"></arrow-left-icon>
+        </router-link>
       </div>
-      <div class="right">
-        <div class="icon-wrapper">
-          <span class="icon-cart icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-person icon"></span>
-        </div>
-        <div class="icon-wrapper">
-          <span class="icon-more icon"></span>
-        </div>
+      <div class="ml-4 text-lg align-top">
+        {{ title }}
       </div>
     </div>
   </transition>
 </template>
 
 <script>
+import { ArrowLeftIcon } from "vue-feather-icons";
 export default {
   name: "TitleBar",
+  components: {
+    ArrowLeftIcon,
+  },
+  computed: {
+    backgroundStyle() {
+      return {
+        "bg-light": this.theme.name === "light",
+        "bg-dark": this.theme.name === "dark",
+        "bg-gold": this.theme.name === "gold",
+        "text-white": this.theme.name === "dark",
+        "text-black": this.theme.name === "light" || this.theme.name === "gold",
+      };
+    },
+    buttonStyle() {
+      return {
+        "btn-light": this.theme.name === "light",
+        "btn-dark": this.theme.name === "dark",
+        "btn-gold": this.theme.name === "gold",
+      };
+    },
+  },
   props: {
     ifTitleAndMenuShow: {
       type: Boolean,
       default: false,
     },
+    title: String,
+    id: String,
+    theme: Object,
   },
 };
 </script>
 
-<style scoped lang="sass">
-@import "@/assets/scss/global"
-.ebook
-  .title-wrapper
-    position: absolute
-    top: 0
-    left: 0
-    z-index: 101
-    display: flex
-    width: 100%
-    // height: px2rem(48)
-    background: white
-    box-shadow: 0 px2rem(8) px2rem(8) rgba(0, 0, 0, .15)
-    .left
-      flex: 0 0 px2rem(60)
-    .right
-      flex: 1
-      display: flex
-      justify-content: flex-end
-      .icon-wrapper
-        flex: 0 0 px2rem(40)
-        .icon
-          font-size: 44px
+<style scoped lang="scss">
+.title-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
 </style>

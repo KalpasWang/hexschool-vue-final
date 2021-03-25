@@ -9,13 +9,16 @@
         <img :src="product.image" class="w-100" alt="product image" />
       </div>
       <div class="col-md-9">
-        <div class="relative">
+        <div class="book-group position-relative">
           <h2 class="text-left">{{ product.title }}</h2>
           <p class="text-left">{{ product.category }}</p>
-          <div class="buttons d-flex justify-content-end mt-5 p-2">
+          <div class="buttons">
             <router-link
               v-if="product.id"
-              :to="{ name: 'Preview', params: { id: product.id } }"
+              :to="{
+                name: 'Preview',
+                params: { id: product.id, title: product.title },
+              }"
               class="btn btn-info rounded-pill mr-2"
             >
               免費試閱
@@ -74,10 +77,13 @@ export default {
 </script>
 
 <style scoped>
+.book-group {
+  min-height: 100px;
+}
 .buttons {
   position: absolute;
-  bottom: 0;
   right: 0;
+  bottom: 0;
 }
 
 .description {
