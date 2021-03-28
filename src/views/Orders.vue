@@ -49,7 +49,7 @@
 
 <script>
 import Pagination from "@/components/Pagination";
-import { SETLOADING } from "@/store/modules/mutation-types";
+import { SET_LOADING } from "@/store/modules/mutation-types";
 
 export default {
   data() {
@@ -67,7 +67,7 @@ export default {
   methods: {
     getOrders(page = 1) {
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/orders?page=${page}`;
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       this.$http
         .get(path)
         .then((res) => {
@@ -96,7 +96,7 @@ export default {
           });
         })
         .finally(() => {
-          this.$store.commit(SETLOADING, false);
+          this.$store.commit(SET_LOADING, false);
         });
     },
   },

@@ -1,6 +1,8 @@
 <template>
   <div class="container p-4">
+    <div v-if="errorMsg.length > 0">{{ errorMsg }}</div>
     <div
+      v-else
       v-cloak
       v-show="product.id === $route.params.id"
       class="row p-3 shadow-sm bg-white"

@@ -9,11 +9,15 @@
       >
         <div class="card shadow-sm rounded-0">
           <div class="card-imageContainer">
-            <router-link
+            <div
               class="card-image"
               :style="{ backgroundImage: `url(${item.image})` }"
-              :to="{ name: 'ProductDetails', params: { id: item.id } }"
-            ></router-link>
+            >
+              <router-link
+                class="card-imageOverlay"
+                :to="{ name: 'ProductDetails', params: { id: item.id } }"
+              ></router-link>
+            </div>
           </div>
           <div class="card-body">
             <span class="badge badge-success font-weight-light p-1 float-right">
@@ -107,10 +111,12 @@ export default {
   border-left: 0;
   border-top: 0;
   border-bottom: 1px solid rgba(62, 101, 119, 0.18);
+  transition: all 0.25s linear;
   overflow: hidden;
 }
 .card:hover {
-  box-shadow: 0 0 29px rgb(0 0 0 / 20%);
+  box-shadow: 0 0 2rem rgba(0, 0, 0, 0.3) !important;
+  border-bottom: 0;
 }
 
 .card-imageContainer {
@@ -128,11 +134,23 @@ export default {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  cursor: pointer;
-  transition: transform 0.5s linear;
+  transition: all 0.25s ease-in-out;
 }
 
-.card-image:hover {
+.card-imageOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transition: all 0.25s ease-in-out;
+}
+
+.card-imageContainer:hover .card-image {
   transform: scale(1.1);
+}
+
+.card-imageContainer:hover .card-imageOverlay {
+  background-color: rgba(0, 0, 0, 0.6);
 }
 </style>

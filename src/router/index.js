@@ -8,8 +8,8 @@ import ProductsList from '@/views/ProductsList';
 import Orders from '@/views/Orders';
 import Coupons from '@/views/Coupons';
 import OrderingSimulation from '@/views/OrderingSimulation';
-import Products from '@/views/Products';
-import ProductDetails from '@/views/ProductDetails';
+import ProductsSimulation from '@/views/ProductsSimulation';
+import ProductDetailsSimulation from '@/views/ProductDetailsSimulation';
 import EBook from '@/views/EBook';
 
 Vue.use(VueRouter);
@@ -45,17 +45,17 @@ const routes = [
         path: 'simulateOrdering',
         name: 'SimulateOrdering',
         component: OrderingSimulation,
-        redirect: { name: 'Products' },
+        redirect: { name: 'ProductsSimulation' },
         children: [
           {
             path: 'products',
-            name: 'Products',
-            component: Products,
+            name: 'ProductsSimulation',
+            component: ProductsSimulation,
           },
           {
             path: 'products/:id',
-            name: 'ProductDetails',
-            component: ProductDetails,
+            name: 'ProductDetailsSimulation',
+            component: ProductDetailsSimulation,
           },
         ],
       },

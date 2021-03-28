@@ -1,4 +1,4 @@
-import { SETLOADING } from './mutation-types';
+import { SET_LOADING } from './mutation-types';
 
 export default {
   state: () => ({
@@ -12,7 +12,7 @@ export default {
   },
 
   mutations: {
-    [SETLOADING](state, value) {
+    [SET_LOADING](state, value) {
       state.loading = value;
     },
   },

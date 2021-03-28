@@ -70,7 +70,7 @@
 <script>
 import BookModal from "@/components/BookModal";
 import Pagination from "@/components/Pagination";
-import { SETLOADING } from "@/store/modules/mutation-types";
+import { SET_LOADING } from "@/store/modules/mutation-types";
 
 export default {
   data() {
@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     getProducts(page = 1) {
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products?page=${page}`;
       this.$http
         .get(path)
@@ -120,7 +120,7 @@ export default {
           });
         })
         .finally(() => {
-          this.$store.commit(SETLOADING, false);
+          this.$store.commit(SET_LOADING, false);
         });
     },
 
@@ -130,7 +130,7 @@ export default {
 
     updateProduct(item) {
       // console.log(item);
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product`;
       let method = "post";
       const isNew = item.id ? false : true;
@@ -169,12 +169,12 @@ export default {
         })
         .finally(() => {
           vm.$refs.bookModal.hide();
-          vm.$store.commit(SETLOADING, false);
+          vm.$store.commit(SET_LOADING, false);
         });
     },
 
     deleteProduct(item) {
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       const vm = this;
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
       console.log(item);
@@ -212,7 +212,7 @@ export default {
           });
         })
         .finally(() => {
-          vm.$store.commit(SETLOADING, false);
+          vm.$store.commit(SET_LOADING, false);
         });
     },
   },

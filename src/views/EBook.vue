@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { SETLOADING } from "@/store/modules/mutation-types";
+import { SET_LOADING } from "@/store/modules/mutation-types";
 import EBookTitleBar from "@/components/EBookTitleBar";
 import EBookMenuBar from "@/components/EBookMenuBar";
 import EBookToc from "@/components/EBookToc";
@@ -208,7 +208,7 @@ export default {
     },
     // 渲染 epub 檔案
     showEpub() {
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       // 生成 Ebook
       this.book = new Epub(DOWNLOAD_URL);
       // 生成 Rendtion
@@ -235,10 +235,10 @@ export default {
           this.locations = this.book.locations;
           window.addEventListener("resize", this.resizeEpub);
           this.bookAvailable = true;
-          this.$store.commit(SETLOADING, false);
+          this.$store.commit(SET_LOADING, false);
         })
         .catch(() => {
-          this.$store.commit(SETLOADING, false);
+          this.$store.commit(SET_LOADING, false);
           this.errorMsg = "無法開啟此書";
         });
     },

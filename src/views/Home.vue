@@ -4,7 +4,7 @@
     <router-link :to="{ name: 'Login' }" class="btn btn-primary">
       Login
     </router-link>
-    <router-link :to="{ name: 'Products' }" class="btn btn-secondary">
+    <router-link :to="{ name: 'SimulateOrdering' }" class="btn btn-secondary">
       DashBoard
     </router-link>
   </div>

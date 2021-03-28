@@ -63,7 +63,7 @@
 <script>
 import CouponModal from "@/components/CouponModal";
 import Pagination from "@/components/Pagination";
-import { SETLOADING } from "@/store/modules/mutation-types";
+import { SET_LOADING } from "@/store/modules/mutation-types";
 
 export default {
   data() {
@@ -85,7 +85,7 @@ export default {
     },
 
     getCoupons(page = 1) {
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupons?page=${page}`;
       this.$http
         .get(path)
@@ -115,12 +115,12 @@ export default {
           });
         })
         .finally(() => {
-          this.$store.commit(SETLOADING, false);
+          this.$store.commit(SET_LOADING, false);
         });
     },
 
     updateCoupon(item) {
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupon`;
       let method = "post";
       const isNew = item.id ? false : true;
@@ -159,12 +159,12 @@ export default {
         })
         .finally(() => {
           vm.$refs.couponModal.hide();
-          vm.$store.commit(SETLOADING, false);
+          vm.$store.commit(SET_LOADING, false);
         });
     },
 
     deleteCoupon(item) {
-      this.$store.commit(SETLOADING, true);
+      this.$store.commit(SET_LOADING, true);
       const vm = this;
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/coupon/${item.id}`;
       console.log(item);
@@ -202,7 +202,7 @@ export default {
           });
         })
         .finally(() => {
-          vm.$store.commit(SETLOADING, false);
+          vm.$store.commit(SET_LOADING, false);
         });
     },
   },
