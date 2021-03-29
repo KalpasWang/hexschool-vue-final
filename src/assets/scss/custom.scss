@@ -10,9 +10,19 @@
   align-items: center;
 }
 
+.flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .icon-lg {
   width: 1.5rem !important;
   height: 1.5rem !important;
+}
+
+.font-mono {
+  font-family: monospace !important;
 }
 
 .text-lg {
@@ -25,6 +35,10 @@
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.show {
+  display: block !important;
 }
 
 // z-index

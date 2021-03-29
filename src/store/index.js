@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import Loading from './modules/loading';
 import Products from './modules/products';
 import ProductDetails from './modules/productsDetails';
+import Cart from './modules/cart';
 
 Vue.use(Vuex);
 
@@ -14,5 +15,6 @@ export default new Vuex.Store({
     Loading,
     Products,
     ProductDetails,
+    Cart,
   },
 });

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row mt-5">
+    <div class="row mt-4">
       <div v-if="allProductsErrorMsg.length > 0">{{ allProductsErrotMsg }}</div>
       <div
         class="col-md-4 col-sm-6 mb-4"
@@ -54,11 +54,8 @@
               <button
                 type="button"
                 class="btn btn-primary btn-sm rounded-pill px-3 ml-auto"
+                @click="addToCart(item.id)"
               >
-                <i
-                  v-if="item.id === selectedItemId"
-                  class="fas fa-spinner fa-spin"
-                ></i>
                 加入購物車
               </button>
             </div>
@@ -75,9 +72,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "ProductsSimulation",
   data() {
-    return {
-      selectedItemId: "",
-    };
+    return {};
   },
 
   computed: {
@@ -87,6 +82,9 @@ export default {
   methods: {
     getProducts() {
       this.$store.dispatch("fetchAllProducts");
+    },
+    addToCart(id) {
+      this.$store.dispatch("postProductToCart", id);
     },
   },
 

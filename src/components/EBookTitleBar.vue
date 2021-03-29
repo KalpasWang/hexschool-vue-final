@@ -6,9 +6,9 @@
       v-show="ifTitleAndMenuShow"
     >
       <div class="btn p-2 rounded-circle" :class="buttonStyle">
-        <router-link :to="{ name: 'ProductDetails', params: { id: id } }">
+        <a href="#" @click.prevent="$router.go(-1)">
           <arrow-left-icon size="4x" class="icon-lg"></arrow-left-icon>
-        </router-link>
+        </a>
       </div>
       <div class="ml-4 text-lg align-top">
         {{ title }}

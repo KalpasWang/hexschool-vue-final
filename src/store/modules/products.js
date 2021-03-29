@@ -100,7 +100,7 @@ export default {
         .then((res) => {
           console.log(path, res.data);
           if (res.data.success) {
-            commit(SET_ALL_PRODUCTS, res.data.products);
+            commit(SET_ALL_PRODUCTS, res.data.products.reverse());
             commit(SET_ALL_PRODUCTS_ERROR_MSG, '');
           } else {
             commit(SET_ALL_PRODUCTS_ERROR_MSG, '無法取得產品列表！請再試試看');
