@@ -14,34 +14,40 @@
           </span>
         </button>
         <div
-          v-if="cart.length > 0"
+          v-if="cart.carts.length > 0"
           class="dropdown-menu"
           :class="{ show: showDropdown }"
           aria-labelledby="dropdownMenuButton"
+          @click.stop="showDropdown = showDropdown"
         >
           <div
             v-for="item in cart.carts"
-            class="dropdown-item flex-between-center"
+            class="dropdown-item flex-between-center py-2"
             :key="item.id"
           >
-            <span>{{ item.title }}</span>
-            <span v-if="!item.price">{{ item.origin_price }}</span>
-            <span v-else>{{ item.price }}</span>
+            <trash-2-icon
+              size="5x"
+              class="icon-lg text-danger cursor-pointer"
+              @click.stop="deleteItemInCart(item)"
+            ></trash-2-icon>
+            <span>{{ item.product.title }}</span>
+            <span>{{ item.final_total }}</span>
           </div>
           <div class="dopdown-divder"></div>
-          <div class="dropdown-item">
-            <button class="btn btn-primary ml-auto mr-3">結帳</button>
+          <div class="mt-2">
+            <button class="btn btn-primary btn-block rounded-0">結帳</button>
           </div>
         </div>
       </li>
     </ul>
-    <router-view />
+    <router-view @addToCart="addItemToCart" />
   </div>
 </template>
 
 <script>
-import { ShoppingCartIcon } from "vue-feather-icons";
+import { ShoppingCartIcon, Trash2Icon } from "vue-feather-icons";
 import { mapGetters } from "vuex";
+import { SET_LOADING } from "@/store/modules/mutation-types";
 
 export default {
   name: "OrderingSimulation",
@@ -52,9 +58,82 @@ export default {
   },
   components: {
     ShoppingCartIcon,
+    Trash2Icon,
   },
   computed: {
     ...mapGetters(["cart", "cartMsg", "cartMsgType"]),
+  },
+  methods: {
+    deleteItemInCart(item) {
+      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart/${item.id}`;
+      this.$store.commit(SET_LOADING, true);
+      this.$http
+        .delete(path)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            this.$store.dispatch("getCart");
+            this.$notify({
+              group: "alert",
+              title: "刪除成功",
+              text: res.data.message,
+              type: "success",
+            });
+          } else {
+            this.$notify({
+              group: "alert",
+              title: "刪除失敗",
+              text: res.data.message,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$notify({
+            group: "alert",
+            title: "刪除失敗",
+            text: err.message,
+            type: "error",
+          });
+        })
+        .finally(() => {
+          this.$store.commit(SET_LOADING, false);
+        });
+    },
+    addItemToCart(id) {
+      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart`;
+      this.$store.commit(SET_LOADING, true);
+      this.$http
+        .post(path, { data: { product_id: id, qty: 1 } })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success) {
+            this.$store.dispatch("getCart");
+            this.$notify({
+              group: "alert",
+              text: res.data.message,
+              type: "success",
+            });
+          } else {
+            this.$notify({
+              group: "alert",
+              text: res.data.message,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$notify({
+            group: "alert",
+            title: "加入購物車失敗",
+            text: err.message,
+            type: "error",
+          });
+        })
+        .finally(() => {
+          this.$store.commit(SET_LOADING, false);
+        });
+    },
   },
   created() {
     this.$store.dispatch("getCart");

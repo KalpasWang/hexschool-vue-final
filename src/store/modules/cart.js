@@ -61,7 +61,7 @@ export default {
         });
     },
     postProductToCart({ commit, state, dispatch }, id) {
-      if (state.cart.carts.some((item) => item.id === id)) {
+      if (state.cart.carts.some((item) => item.product_id === id)) {
         return;
       }
       commit(SET_LOADING, true);

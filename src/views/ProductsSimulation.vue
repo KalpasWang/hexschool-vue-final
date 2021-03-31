@@ -84,7 +84,8 @@ export default {
       this.$store.dispatch("fetchAllProducts");
     },
     addToCart(id) {
-      this.$store.dispatch("postProductToCart", id);
+      // this.$store.dispatch("postProductToCart", id);
+      this.$emit("addToCart", id);
     },
   },
 
