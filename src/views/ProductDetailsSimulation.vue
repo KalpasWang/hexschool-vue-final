@@ -15,16 +15,6 @@
           <h2 class="text-left">{{ product.title }}</h2>
           <p class="text-left">{{ product.category }}</p>
           <div class="buttons">
-            <router-link
-              v-if="product.id"
-              :to="{
-                name: 'Preview',
-                params: { id: product.id, title: product.title },
-              }"
-              class="btn btn-info rounded-pill mr-2"
-            >
-              免費試閱
-            </router-link>
             <button
               v-if="product.origin_price && product.price"
               class="btn btn-primary rounded-pill"

@@ -10,7 +10,6 @@ import Coupons from '@/views/Coupons';
 import OrderingSimulation from '@/views/OrderingSimulation';
 import ProductsSimulation from '@/views/ProductsSimulation';
 import ProductDetailsSimulation from '@/views/ProductDetailsSimulation';
-import EBook from '@/views/EBook';
 
 Vue.use(VueRouter);
 
@@ -60,12 +59,6 @@ const routes = [
         ],
       },
     ],
-  },
-  {
-    path: '/preview/:id-:title',
-    name: 'Preview',
-    component: EBook,
-    props: true,
   },
   {
     path: '/login',

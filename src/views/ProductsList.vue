@@ -1,18 +1,18 @@
 <template>
   <div class="py-2">
-    <BookModal ref="bookModal" @save="updateProduct" />
+    <ProductModal ref="bookModal" @save="updateProduct" />
     <h1
       class="display-4 d-flex justify-content-between align-items-center mb-4"
     >
-      所有書籍
-      <button @click="openModal({})" class="btn btn-primary">新增書籍</button>
+      所有產品
+      <button @click="openModal({})" class="btn btn-primary">新增產品</button>
     </h1>
     <div class="table-responsive">
       <table class="table table-hover shadow-sm vertical-align bg-white">
         <thead class="thead-light text-center">
           <th>圖片</th>
-          <th>書籍類別</th>
-          <th>書籍名稱</th>
+          <th>產品類別</th>
+          <th>產品名稱</th>
           <th>原價</th>
           <th>優惠價</th>
           <th>是否啟用</th>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import BookModal from "@/components/BookModal";
+import ProductModal from "@/components/ProductModal";
 import Pagination from "@/components/Pagination";
 import { SET_LOADING } from "@/store/modules/mutation-types";
 
@@ -83,7 +83,7 @@ export default {
     };
   },
   components: {
-    BookModal,
+    ProductModal,
     Pagination,
   },
   methods: {
