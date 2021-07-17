@@ -60,13 +60,13 @@ export default {
           // commit(SET_LOADING, false);
         });
     },
-    postProductToCart({ commit, state, dispatch }, id) {
-      if (state.cart.carts.some((item) => item.product_id === id)) {
-        return;
-      }
+    postProductToCart({ commit, dispatch }, { id, qty }) {
+      // if (state.cart.carts.some((item) => item.product_id === id)) {
+      //   return;
+      // }
       commit(SET_LOADING, true);
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart`;
-      Axios.post(path, { data: { product_id: id, qty: 1 } })
+      Axios.post(path, { data: { product_id: id, qty: qty } })
         .then((res) => {
           console.log(path, res.data);
           if (res.data.success) {

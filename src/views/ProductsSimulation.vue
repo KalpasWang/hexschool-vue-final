@@ -41,14 +41,16 @@
             <p class="card-text">{{ item.content }}</p>
             <div class="d-flex mt-5">
               <div class="d-flex align-items-center">
-                <div class="font-bold" v-if="!item.price">
-                  {{ item.origin_price | currency }}
-                </div>
-                <del class="text-muted d-block" v-if="item.price">
-                  {{ item.origin_price | currency }}
-                </del>
-                <div class="font-bold ml-1 mb-0" v-if="item.price">
+                <div class="h6" v-if="!item.origin_price">
                   {{ item.price | currency }}
+                </div>
+                <div v-else>
+                  <del class="text-muted font-weight-light">
+                    {{ item.origin_price | currency }}
+                  </del>
+                  <span class="h6 ml-1">
+                    {{ item.price | currency }}
+                  </span>
                 </div>
               </div>
               <button
@@ -84,8 +86,8 @@ export default {
       this.$store.dispatch("fetchAllProducts");
     },
     addToCart(id) {
-      // this.$store.dispatch("postProductToCart", id);
-      this.$emit("addToCart", id);
+      this.$store.dispatch("postProductToCart", { id, qty: 1 });
+      // this.$emit("addToCart", id);
     },
   },
 

@@ -15,7 +15,7 @@
         </button>
         <div
           v-if="cart.carts.length > 0"
-          class="dropdown-menu"
+          class="dropdown-menu shadow-sm"
           :class="{ show: showDropdown }"
           aria-labelledby="dropdownMenuButton"
           @click.stop="showDropdown = showDropdown"
@@ -40,7 +40,7 @@
         </div>
       </li>
     </ul>
-    <router-view @addToCart="addItemToCart" />
+    <router-view />
   </div>
 </template>
 
@@ -92,40 +92,6 @@ export default {
           this.$notify({
             group: "alert",
             title: "刪除失敗",
-            text: err.message,
-            type: "error",
-          });
-        })
-        .finally(() => {
-          this.$store.commit(SET_LOADING, false);
-        });
-    },
-    addItemToCart(id) {
-      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart`;
-      this.$store.commit(SET_LOADING, true);
-      this.$http
-        .post(path, { data: { product_id: id, qty: 1 } })
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.success) {
-            this.$store.dispatch("getCart");
-            this.$notify({
-              group: "alert",
-              text: res.data.message,
-              type: "success",
-            });
-          } else {
-            this.$notify({
-              group: "alert",
-              text: res.data.message,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$notify({
-            group: "alert",
-            title: "加入購物車失敗",
             text: err.message,
             type: "error",
           });

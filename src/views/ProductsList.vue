@@ -14,7 +14,7 @@
           <th>產品類別</th>
           <th>產品名稱</th>
           <th>原價</th>
-          <th>優惠價</th>
+          <th>售價</th>
           <th>是否啟用</th>
           <th>編輯</th>
         </thead>
