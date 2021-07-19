@@ -43,7 +43,7 @@ export default {
     getCart({ commit }) {
       // commit(SET_LOADING, true);
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart`;
-      Axios.get(path)
+      return Axios.get(path)
         .then((res) => {
           console.log(path, res.data);
           if (res.data.success) {
@@ -65,14 +65,15 @@ export default {
       //   return;
       // }
       commit(SET_LOADING, true);
+      commit(SET_CART_MSG, '');
       const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart`;
-      Axios.post(path, { data: { product_id: id, qty: qty } })
+      return Axios.post(path, { data: { product_id: id, qty: qty } })
         .then((res) => {
           console.log(path, res.data);
           if (res.data.success) {
-            dispatch('getCart');
             commit(SET_CART_MSG, '加入購物車成功！');
             commit(SET_CART_MSG_TYPE, 'success');
+            dispatch('getCart');
           } else {
             commit(SET_CART_MSG, '加入購物車失敗！請再試試看');
             commit(SET_CART_MSG_TYPE, 'error');

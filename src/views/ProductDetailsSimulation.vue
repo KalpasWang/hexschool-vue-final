@@ -1,29 +1,29 @@
 <template>
   <div class="container p-4">
-    <div v-if="errorMsg.length > 0">{{ errorMsg }}</div>
+    <div v-if="productDetailsErrorMsg">{{ productDetailsErrorMsg }}</div>
     <div
       v-else
       v-cloak
-      v-show="product.id === $route.params.id"
+      v-show="productDetails.id === $route.params.id"
       class="row p-3 shadow-sm bg-white"
     >
       <div class="col-md-3">
-        <img :src="product.image" class="w-100" alt="product image" />
+        <img :src="productDetails.image" class="w-100" alt="product image" />
       </div>
       <div class="col-md-9">
         <div class="book-group position-relative">
-          <h2 class="text-left">{{ product.title }}</h2>
-          <p class="text-left">{{ product.category }}</p>
+          <h2 class="text-left">{{ productDetails.title }}</h2>
+          <p class="text-left">{{ productDetails.category }}</p>
           <div class="text-left">
-            <p class="h6" v-if="!product.origin_price">
-              {{ product.price | currency }}
+            <p class="h6" v-if="!productDetails.origin_price">
+              {{ productDetails.price | currency }}
             </p>
             <p v-else>
               <del class="text-muted font-weight-light">
-                {{ product.origin_price | currency }}
+                {{ productDetails.origin_price | currency }}
               </del>
               <span class="h6 ml-1">
-                {{ product.price | currency }}
+                {{ productDetails.price | currency }}
               </span>
             </p>
           </div>
@@ -44,17 +44,17 @@
             </label>
             <button
               class="btn btn-primary rounded-pill"
-              @click="addToCart(product.id, qty)"
+              @click="addToCart(productDetails.id, qty)"
             >
               加入購物車
             </button>
           </div>
         </div>
       </div>
-      <div v-if="product.description" class="pt-5 col-12 text-left">
+      <div v-if="productDetails.description" class="pt-5 col-12 text-left">
         <h4 class="text-left mb-3">商品簡介</h4>
         <pre class="description h6 font-weight-normal">
-          {{ product.description }}
+          {{ productDetails.description }}
         </pre>
       </div>
     </div>
@@ -64,6 +64,7 @@
 import { mapGetters } from "vuex";
 
 export default {
+  name: "ProductDetailsSimulation",
   data() {
     return {
       qty: 1,
@@ -78,8 +79,16 @@ export default {
     ]),
   },
   methods: {
-    async addToCart(id, qty) {
-      await this.$store.dispatch("postProductToCart", { id, qty });
+    addToCart(id, qty) {
+      this.$store.dispatch("postProductToCart", { id, qty }).finally(() => {
+        if (this.cartMsg) {
+          this.$notify({
+            group: "alert",
+            title: this.cartMsg,
+            type: this.cartMsgType,
+          });
+        }
+      });
     },
   },
   created() {
