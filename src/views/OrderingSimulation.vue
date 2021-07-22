@@ -1,12 +1,11 @@
 <template>
-  <div class="container" @click="showDropdown = false">
+  <div class="container">
     <ul class="nav justify-content-start mt-5 p-3">
       <li class="nav-item dropdown">
         <button
+          v-if="cart.carts"
           class="btn btn-success py-1 rounded-pill flex-center"
-          tabindex="-1"
-          aria-disabled="true"
-          @click.stop="showDropdown = !showDropdown"
+          @click.stop="toggleDropdown()"
         >
           <shopping-cart-icon size="4x" class="icon-lg"></shopping-cart-icon>
           <span class="align-middle text-white mb-0 font-mono">
@@ -14,11 +13,10 @@
           </span>
         </button>
         <div
-          v-if="cart.carts.length > 0"
+          v-if="cart.carts && cart.carts.length"
           class="dropdown-menu shadow-sm"
-          :class="{ show: showDropdown }"
-          aria-labelledby="dropdownMenuButton"
-          @click.stop="showDropdown = showDropdown"
+          :class="{ show: isDropdownShow }"
+          @click.stop=""
         >
           <div
             v-for="item in cart.carts"
@@ -51,19 +49,19 @@ import { SET_LOADING } from "@/store/modules/mutation-types";
 
 export default {
   name: "OrderingSimulation",
-  data() {
-    return {
-      showDropdown: false,
-    };
-  },
   components: {
     ShoppingCartIcon,
     Trash2Icon,
   },
   computed: {
-    ...mapGetters(["cart", "cartMsg", "cartMsgType"]),
+    ...mapGetters(["cart", "cartMsg", "cartMsgType", "isDropdownShow"]),
   },
   methods: {
+    toggleDropdown() {
+      this.isDropdownShow
+        ? this.$store.dispatch("closeDropdown")
+        : this.$store.dispatch("showDropdown");
+    },
     deleteItemInCart(item) {
       let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart/${item.id}`;
       this.$store.commit(SET_LOADING, true);
@@ -102,6 +100,7 @@ export default {
     },
   },
   created() {
+    this.$store.dispatch("closeDropdown");
     this.$store.dispatch("getCart");
   },
 };

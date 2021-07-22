@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard min-h100">
+  <div class="dashboard min-h100" @click="$store.dispatch('closeDropdown')">
     <NavBar />
     <div class="container-fluid min-h100">
       <div class="row">
@@ -25,7 +25,6 @@ export default {
     SideBar,
     NavBar,
   },
-
   methods: {
     signout() {
       const path = `${process.env.VUE_APP_API_PATH}/logout`;

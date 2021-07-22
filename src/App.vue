@@ -19,6 +19,14 @@ export default {
   components: {
     Loading,
   },
+  methods: {
+    closeDropdown() {
+      console.log(this.$refs);
+      if (this.$refs.simuDropdown) {
+        this.$refs.simuDropdown.classList.remove("show");
+      }
+    },
+  },
 };
 </script>
 

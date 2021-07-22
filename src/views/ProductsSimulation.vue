@@ -87,7 +87,6 @@ export default {
     },
     addToCart(id) {
       this.$store.dispatch("postProductToCart", { id, qty: 1 });
-      // this.$emit("addToCart", id);
     },
   },
 

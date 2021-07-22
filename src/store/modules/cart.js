@@ -2,6 +2,7 @@ import {
   ADD_PRODUCT_TO_CART,
   SET_CART_MSG,
   SET_CART_MSG_TYPE,
+  SET_DROPDOWN_SHOW,
   SET_LOADING,
 } from './mutation-types';
 import Axios from 'axios';
@@ -9,6 +10,7 @@ import Axios from 'axios';
 export default {
   state: () => ({
     cart: [],
+    isDropdownShow: false,
     cartMsg: '',
     cartMsgType: '',
   }),
@@ -23,6 +25,9 @@ export default {
     cartMsgType(state) {
       return state.cartMsgType;
     },
+    isDropdownShow(state) {
+      return state.isDropdownShow;
+    },
   },
 
   mutations: {
@@ -36,6 +41,10 @@ export default {
 
     [SET_CART_MSG_TYPE](state, value) {
       state.cartMsgType = value;
+    },
+
+    [SET_DROPDOWN_SHOW](state, value) {
+      state.isDropdownShow = value;
     },
   },
 
@@ -85,6 +94,12 @@ export default {
           commit(SET_CART_MSG_TYPE, 'error');
           commit(SET_LOADING, false);
         });
+    },
+    showDropdown({ commit }) {
+      commit(SET_DROPDOWN_SHOW, true);
+    },
+    closeDropdown({ commit }) {
+      commit(SET_DROPDOWN_SHOW, false);
     },
   },
 };

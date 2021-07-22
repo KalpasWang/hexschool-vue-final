@@ -13,12 +13,14 @@ Vue.config.devtools = true;
 Vue.config.errorHandler = function(err, vm, info) {
   console.log(err, vm, info);
 };
+
+Vue.prototype.$apiPath = process.env.VUE_APP_API_PATH;
+Vue.prototype.$apiParams = process.env.VUE_APP_API_PARAMS;
+
 Vue.use(VueAxios, axios);
 Vue.use(Notifications);
 Vue.filter('currency', currencyFilter);
 Vue.filter('date', dateFilter);
-
-// axios.defaults.withCredentials = true;
 
 new Vue({
   router,
