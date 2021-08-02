@@ -7,6 +7,7 @@ import axios from 'axios';
 import Notifications from 'vue-notification';
 import currencyFilter from './filters/currency';
 import dateFilter from './filters/date';
+import './validation/rules';
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;

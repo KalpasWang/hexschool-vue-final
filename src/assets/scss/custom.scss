@@ -19,6 +19,9 @@
 .icon-lg {
   width: 1.5rem !important;
   height: 1.5rem !important;
+  &:hover {
+    filter: brightness(90%);
+  }
 }
 
 .font-mono {

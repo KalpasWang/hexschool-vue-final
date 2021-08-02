@@ -5,11 +5,13 @@ import Home from '@/views/Home';
 import DashBoard from '@/views/DashBoard';
 import Login from '@/views/Login';
 import ProductsList from '@/views/ProductsList';
-import Orders from '@/views/Orders';
+import OrdersList from '@/views/OrdersList';
 import Coupons from '@/views/Coupons';
 import OrderingSimulation from '@/views/OrderingSimulation';
 import ProductsSimulation from '@/views/ProductsSimulation';
 import ProductDetailsSimulation from '@/views/ProductDetailsSimulation';
+import OrdersSimulation from '@/views/OrdersSimulation';
+import CheckoutSimulation from '@/views/CheckoutSimulation';
 
 Vue.use(VueRouter);
 
@@ -31,9 +33,9 @@ const routes = [
         component: ProductsList,
       },
       {
-        path: 'orders',
-        name: 'Orders',
-        component: Orders,
+        path: 'ordersList',
+        name: 'OrdersList',
+        component: OrdersList,
       },
       {
         path: 'coupons',
@@ -57,6 +59,16 @@ const routes = [
             component: ProductDetailsSimulation,
           },
         ],
+      },
+      {
+        path: 'ordersSimulation',
+        name: 'OrdersSimulation',
+        component: OrdersSimulation,
+      },
+      {
+        path: 'checkoutSimulation/:orderId',
+        name: 'CheckoutSimulation',
+        component: CheckoutSimulation,
       },
     ],
   },

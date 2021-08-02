@@ -18,22 +18,27 @@
           :class="{ show: isDropdownShow }"
           @click.stop=""
         >
-          <div
-            v-for="item in cart.carts"
-            class="dropdown-item flex-between-center py-2"
-            :key="item.id"
-          >
-            <trash-2-icon
-              size="5x"
-              class="icon-lg text-danger cursor-pointer"
-              @click.stop="deleteItemInCart(item)"
-            ></trash-2-icon>
-            <span>{{ item.product.title }}</span>
-            <span>{{ item.final_total }}</span>
-          </div>
-          <div class="dopdown-divder"></div>
-          <div class="mt-2">
-            <button class="btn btn-primary btn-block rounded-0">結帳</button>
+          <table class="table table-hover mb-0">
+            <tr v-for="item in cart.carts" :key="item.id" class="text-nowrap">
+              <td>
+                <trash-2-icon
+                  size="5x"
+                  class="icon-lg text-danger cursor-pointer"
+                  @click.stop="deleteItemInCart(item)"
+                ></trash-2-icon>
+              </td>
+              <td>{{ item.product.title }}</td>
+              <td>{{ item.qty }}/{{ item.product.unit || "個" }}</td>
+              <td>{{ item.final_total }}</td>
+            </tr>
+          </table>
+          <div>
+            <router-link
+              :to="{ name: 'OrdersSimulation' }"
+              class="btn btn-primary btn-block rounded-0"
+            >
+              結帳
+            </router-link>
           </div>
         </div>
       </li>
@@ -44,8 +49,7 @@
 
 <script>
 import { ShoppingCartIcon, Trash2Icon } from "vue-feather-icons";
-import { mapGetters } from "vuex";
-import { SET_LOADING } from "@/store/modules/mutation-types";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "OrderingSimulation",
@@ -57,50 +61,25 @@ export default {
     ...mapGetters(["cart", "cartMsg", "cartMsgType", "isDropdownShow"]),
   },
   methods: {
+    ...mapActions([
+      "startLoading",
+      "endLoading",
+      "showDropdown",
+      "closeDropdown",
+    ]),
     toggleDropdown() {
-      this.isDropdownShow
-        ? this.$store.dispatch("closeDropdown")
-        : this.$store.dispatch("showDropdown");
+      this.isDropdownShow ? this.closeDropdown() : this.showDropdown();
     },
     deleteItemInCart(item) {
-      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/cart/${item.id}`;
-      this.$store.commit(SET_LOADING, true);
-      this.$http
-        .delete(path)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.success) {
-            this.$store.dispatch("getCart");
-            this.$notify({
-              group: "alert",
-              title: "刪除成功",
-              text: res.data.message,
-              type: "success",
-            });
-          } else {
-            this.$notify({
-              group: "alert",
-              title: "刪除失敗",
-              text: res.data.message,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$notify({
-            group: "alert",
-            title: "刪除失敗",
-            text: err.message,
-            type: "error",
-          });
-        })
-        .finally(() => {
-          this.$store.commit(SET_LOADING, false);
-        });
+      this.startLoading();
+      this.$store.dispatch("deleteProductInCart", item.id).finally(() => {
+        this.$store.dispatch("getCart");
+        this.endLoading();
+      });
     },
   },
-  created() {
-    this.$store.dispatch("closeDropdown");
+  mounted() {
+    this.closeDropdown();
     this.$store.dispatch("getCart");
   },
 };

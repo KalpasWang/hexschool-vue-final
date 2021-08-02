@@ -5,7 +5,16 @@
   >
     <div class="sidebar-sticky pt-3">
       <h6
-        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+        class="
+          sidebar-heading
+          d-flex
+          justify-content-between
+          align-items-center
+          px-3
+          mt-4
+          mb-1
+          text-muted
+        "
       >
         <span>商品管理</span>
         <span
@@ -23,7 +32,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'Orders' }" class="nav-link">
+          <router-link :to="{ name: 'OrdersList' }" class="nav-link">
             <list-icon size="1.5x"></list-icon>
             訂單列表
           </router-link>
@@ -37,7 +46,16 @@
       </ul>
 
       <h6
-        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+        class="
+          sidebar-heading
+          d-flex
+          justify-content-between
+          align-items-center
+          px-3
+          mt-4
+          mb-1
+          text-muted
+        "
       >
         <span>模擬功能</span>
         <span

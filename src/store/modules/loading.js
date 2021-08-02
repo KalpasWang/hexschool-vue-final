@@ -16,4 +16,14 @@ export default {
       state.loading = value;
     },
   },
+
+  actions: {
+    startLoading({ commit }) {
+      commit(SET_LOADING, true);
+    },
+
+    endLoading({ commit }) {
+      commit(SET_LOADING, false);
+    },
+  },
 };
