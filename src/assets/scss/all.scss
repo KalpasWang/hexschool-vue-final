@@ -1,38 +1,47 @@
 @import '~bootstrap/scss/functions';
-@import './variables';
-@import '~bootstrap/scss/mixins';
-@import '~bootstrap/scss/root';
-@import '~bootstrap/scss/reboot';
-@import '~bootstrap/scss/type';
-@import '~bootstrap/scss/images';
-@import '~bootstrap/scss/code';
-@import '~bootstrap/scss/grid';
-@import '~bootstrap/scss/tables';
-@import '~bootstrap/scss/forms';
-@import '~bootstrap/scss/buttons';
-@import '~bootstrap/scss/transitions';
-@import '~bootstrap/scss/dropdown';
-@import '~bootstrap/scss/button-group';
-@import '~bootstrap/scss/input-group';
-@import '~bootstrap/scss/custom-forms';
-@import '~bootstrap/scss/nav';
-@import '~bootstrap/scss/navbar';
-@import '~bootstrap/scss/card';
-@import '~bootstrap/scss/breadcrumb';
-@import '~bootstrap/scss/pagination';
-@import '~bootstrap/scss/badge';
-@import '~bootstrap/scss/jumbotron';
-@import '~bootstrap/scss/alert';
-@import '~bootstrap/scss/progress';
-@import '~bootstrap/scss/media';
-@import '~bootstrap/scss/list-group';
-@import '~bootstrap/scss/close';
-@import '~bootstrap/scss/toasts';
-@import '~bootstrap/scss/modal';
-@import '~bootstrap/scss/tooltip';
-@import '~bootstrap/scss/popover';
-@import '~bootstrap/scss/carousel';
-@import '~bootstrap/scss/spinners';
-@import '~bootstrap/scss/utilities';
-@import '~bootstrap/scss/print';
+
+// custom colors
+$primary: #845ec2;
+$secondary: #b39cd0;
+$success: #00c9a7;
+$info: #78deee;
+$danger: #e784ff;
+$light: #eef2f6;
+
+// spacing
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: (
+    $spacer * 0.25,
+  ),
+  2: (
+    $spacer * 0.5,
+  ),
+  3: $spacer,
+  4: (
+    $spacer * 1.5,
+  ),
+  5: (
+      $spacer * 2,
+  ),
+  6: (
+    $spacer * 3,
+  ),
+  7: (
+    $spacer * 4,
+  ),
+  8: (
+    $spacer * 5,
+  ),
+  9: (
+    $spacer * 6,
+  ),
+);
+
+@import '~bootstrap/scss/bootstrap';
+
+// 結合原本的 theme colors
+// $theme-colors: map-merge($theme-colors, $custom-colors);
+
 @import './custom'
