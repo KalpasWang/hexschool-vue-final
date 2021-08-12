@@ -8,34 +8,29 @@
         width="72"
         height="57"
       />
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input
-        type="email"
-        id="inputEmail"
-        v-model="user.username"
-        class="form-control"
-        placeholder="Email address"
-        required
-        autofocus
-      />
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input
-        type="password"
-        id="inputPassword"
-        v-model="user.password"
-        class="form-control"
-        placeholder="Password"
-        required
-      />
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me" /> Remember me
-        </label>
-      </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">
-        Sign in
-      </button>
+      <h1 class="h3 mb-3 fw-normal">登入帳號</h1>
+      <label>
+        <span class="visually-hidden">Email address</span>
+        <input
+          type="email"
+          v-model="user.username"
+          class="form-control"
+          placeholder="Email"
+          required
+          autofocus
+        />
+      </label>
+      <label>
+        <span class="visually-hidden">Password</span>
+        <input
+          type="password"
+          v-model="user.password"
+          class="form-control"
+          placeholder="密碼"
+          required
+        />
+      </label>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">登入</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
     </form>
   </div>
@@ -74,19 +69,6 @@ export default {
 </script>
 
 <style scoped>
-/* html,
-body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #f5f5f5;
-} */
-
 .form-signin {
   width: 100%;
   max-width: 330px;

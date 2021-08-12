@@ -8,15 +8,15 @@
       <button @click="openModal({})" class="btn btn-primary">新增產品</button>
     </h1>
     <div class="table-responsive">
-      <table class="table table-hover shadow-sm vertical-align bg-white">
-        <thead class="thead-light text-center">
-          <th>圖片</th>
-          <th>產品類別</th>
-          <th>產品名稱</th>
-          <th>原價</th>
-          <th>售價</th>
-          <th>是否啟用</th>
-          <th>編輯</th>
+      <table class="table table-hover border border-secondary">
+        <thead class="bg-secondary">
+          <th scope="col">圖片</th>
+          <th scope="col">產品類別</th>
+          <th scope="col">產品名稱</th>
+          <th scope="col">原價</th>
+          <th scope="col">售價</th>
+          <th scope="col">是否啟用</th>
+          <th scope="col">編輯</th>
         </thead>
         <tbody>
           <tr v-for="item in products" :key="item.id">

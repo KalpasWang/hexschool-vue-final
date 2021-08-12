@@ -17,6 +17,7 @@ Vue.config.errorHandler = function(err, vm, info) {
 
 Vue.prototype.$apiPath = process.env.VUE_APP_API_PATH;
 Vue.prototype.$apiParams = process.env.VUE_APP_API_PARAMS;
+Vue.prototype.$title = process.env.VUE_APP_TITLE;
 
 Vue.use(VueAxios, axios);
 Vue.use(Notifications);

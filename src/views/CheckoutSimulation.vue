@@ -16,7 +16,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="2" class="text-right">總計</td>
+            <td colspan="2" class="text-end">總計</td>
             <td>{{ order.total }}</td>
           </tr>
         </tfoot>
@@ -49,7 +49,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="text-right" v-if="order.is_paid === false">
+      <div class="text-end" v-if="order.is_paid === false">
         <button class="btn btn-danger">確認付款去</button>
       </div>
     </form>

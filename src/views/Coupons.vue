@@ -1,7 +1,7 @@
 <template>
   <div class="py-2">
     <CouponModal ref="couponModal" @save="updateCoupon" />
-    <div class="text-right mb-4">
+    <div class="text-end mb-4">
       <button class="btn btn-primary" @click="openModal({})">
         建立新的優惠券
       </button>
@@ -32,7 +32,7 @@
             </td>
             <td>
               <button
-                class="btn btn-outline-primary btn-sm mr-1"
+                class="btn btn-outline-primary btn-sm me-1"
                 @click="openModal(item)"
               >
                 編輯

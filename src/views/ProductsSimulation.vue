@@ -1,54 +1,52 @@
 <template>
   <div class="container">
+    <h2>產品列表</h2>
     <div class="row mt-4">
-      <div v-if="allProductsErrorMsg.length > 0">{{ allProductsErrotMsg }}</div>
+      <div v-if="allProductsErrorMsg">{{ allProductsErrotMsg }}</div>
       <div
         class="col-md-4 col-sm-6 mb-4"
         v-else
         v-for="item in allProducts"
         :key="item.id"
       >
-        <div class="card shadow-sm rounded-0">
-          <div class="card-imageContainer">
-            <div
-              class="card-image"
-              :style="{ backgroundImage: `url(${item.image})` }"
-            >
-              <router-link
-                class="card-imageOverlay"
-                :to="{
-                  name: 'ProductDetailsSimulation',
-                  params: { id: item.id },
-                }"
-              ></router-link>
-            </div>
-          </div>
+        <div class="card shadow-sm">
+          <router-link
+            class="card-img-top card-height bg-cover"
+            :style="{ backgroundImage: `url(${item.image})` }"
+            :to="{
+              name: 'ProductDetailsSimulation',
+              params: { id: item.id },
+            }"
+          >
+          </router-link>
           <div class="card-body">
-            <span class="badge badge-success font-weight-light p-1 float-right">
+            <span class="badge bg-success fw-light p-1 float-end">
               {{ item.category }}
             </span>
-            <h6 class="card-title text-left">
+            <h6 class="card-title">
               <router-link
                 :to="{
                   name: 'ProductDetailsSimulation',
                   params: { id: item.id },
                 }"
-                class="text-dark"
+                class="h5 text-decoration-none text-dark"
               >
                 {{ item.title }}
               </router-link>
             </h6>
             <p class="card-text">{{ item.content }}</p>
-            <div class="d-flex mt-5">
-              <div class="d-flex align-items-center">
-                <div class="h6" v-if="!item.origin_price">
+            <div
+              class="d-flex justify-content-between align-content-center mt-5"
+            >
+              <div class="h-100">
+                <div class="fs-5 align-middle" v-if="!item.origin_price">
                   {{ item.price | currency }}
                 </div>
                 <div v-else>
-                  <del class="text-muted font-weight-light">
+                  <del class="text-muted fs-7 fw-light">
                     {{ item.origin_price | currency }}
                   </del>
-                  <span class="h6 ml-1">
+                  <span class="fs-5 align-middle ms-1">
                     {{ item.price | currency }}
                   </span>
                 </div>
@@ -97,7 +95,10 @@ export default {
 </script>
 
 <style scoped>
-.card {
+.card-height {
+  height: 15rem;
+}
+/* .card {
   border-right: 0;
   border-left: 0;
   border-top: 0;
@@ -143,5 +144,5 @@ export default {
 
 .card-imageContainer:hover .card-imageOverlay {
   background-color: rgba(0, 0, 0, 0.6);
-}
+} */
 </style>

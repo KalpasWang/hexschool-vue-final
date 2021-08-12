@@ -11,24 +11,28 @@
         <img :src="productDetails.image" class="w-100" alt="product image" />
       </div>
       <div class="col-md-9">
-        <div class="book-group position-relative">
-          <h2 class="text-left">{{ productDetails.title }}</h2>
-          <p class="text-left">{{ productDetails.category }}</p>
-          <div class="text-left">
+        <div class="product-group position-relative">
+          <h2 class="text-start">{{ productDetails.title }}</h2>
+          <p class="text-start">
+            <span class="badge bg-secondary">{{
+              productDetails.category
+            }}</span>
+          </p>
+          <div class="text-start">
             <p class="h6" v-if="!productDetails.origin_price">
               {{ productDetails.price | currency }}
             </p>
             <p v-else>
-              <del class="text-muted font-weight-light">
+              <del class="text-muted fw-light">
                 {{ productDetails.origin_price | currency }}
               </del>
-              <span class="h6 ml-1">
+              <span class="h6 ms-1">
                 {{ productDetails.price | currency }}
               </span>
             </p>
           </div>
-          <div class="text-right">
-            <label for="amount" class="mr-3 mb-0 align-middle">
+          <div class="text-end">
+            <label for="amount" class="me-3 mb-0 align-middle">
               數量：
               <select v-model="qty">
                 <option>1</option>
@@ -51,9 +55,9 @@
           </div>
         </div>
       </div>
-      <div v-if="productDetails.description" class="pt-5 col-12 text-left">
-        <h4 class="text-left mb-3">商品簡介</h4>
-        <pre class="description h6 font-weight-normal">
+      <div v-if="productDetails.description" class="pt-5 col-12 text-start">
+        <h4 class="text-start mb-3">商品簡介</h4>
+        <pre class="description h6 fw-normal">
           {{ productDetails.description }}
         </pre>
       </div>
@@ -100,7 +104,7 @@ export default {
 </script>
 
 <style scoped>
-.book-group {
+.product-group {
   min-height: 100px;
 }
 .cart {

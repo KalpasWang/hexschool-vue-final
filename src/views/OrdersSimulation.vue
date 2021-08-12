@@ -26,13 +26,13 @@
               <td>{{ item.final_total }}</td>
             </tr>
           </tbody>
-          <tfoot>
+          <tfoot class="fw-bold">
             <tr>
-              <td colspan="3" class="text-right">總計</td>
+              <td colspan="3" class="text-end">總計</td>
               <td>{{ cart.total }}</td>
             </tr>
             <tr v-if="cart.final_total !== cart.total">
-              <td colspan="3" class="text-success text-right">折扣價</td>
+              <td colspan="3" class="text-success text-end">折扣價</td>
               <td class="text-success">{{ cart.final_total }}</td>
             </tr>
           </tfoot>
@@ -48,6 +48,7 @@
             <button
               class="btn btn-outline-secondary"
               type="button"
+              :disabled="!coupon_code"
               @click="addCouponCode()"
             >
               套用優惠碼
@@ -65,7 +66,7 @@
             rules="required|email"
             v-slot="{ errors }"
           >
-            <div class="form-group">
+            <div class="mb-3">
               <input
                 v-model="form.user.email"
                 :class="{ 'is-invalid': errors[0] }"
@@ -82,7 +83,7 @@
             rules="required"
             v-slot="{ errors }"
           >
-            <div class="form-group">
+            <div class="mb-3">
               <input
                 v-model="form.user.name"
                 :class="{ 'is-invalid': errors[0] }"
@@ -99,7 +100,7 @@
             rules="required|numeric"
             v-slot="{ errors }"
           >
-            <div class="form-group">
+            <div class="mb-3">
               <input
                 type="tel"
                 class="form-control"
@@ -116,7 +117,7 @@
             rules="required"
             v-slot="{ errors }"
           >
-            <div class="form-group">
+            <div class="mb-3">
               <input
                 type="address"
                 class="form-control"
@@ -128,7 +129,7 @@
             </div>
           </ValidationProvider>
 
-          <div class="form-group">
+          <div class="mb-3">
             <textarea
               class="form-control"
               rows="5"
@@ -136,7 +137,7 @@
               placeholder="還想說什麼？"
             ></textarea>
           </div>
-          <div class="text-right">
+          <div class="text-end">
             <button class="btn btn-danger" :disabled="invalid">送出訂單</button>
           </div>
         </form>
@@ -189,9 +190,19 @@ export default {
         code: this.coupon_code,
       };
       this.startLoading();
-      this.$http.post(url, { data: coupon }).then((response) => {
-        console.log(response);
-        this.$store.dispatch("getCart");
+      this.$http.post(url, { data: coupon }).then((res) => {
+        // console.log(res);
+        if (res.data.success) {
+          this.coupon_code = "";
+          this.$store.dispatch("getCart");
+        } else {
+          this.$notify({
+            group: "alert",
+            title: "發生錯誤",
+            text: res.data.message,
+            type: "error",
+          });
+        }
         this.endLoading();
       });
     },
