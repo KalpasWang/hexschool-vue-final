@@ -1,6 +1,6 @@
 <template>
   <div class="py-2">
-    <ProductModal ref="bookModal" @save="updateProduct" />
+    <ProductModal ref="productModal" @save="updateProduct" />
     <h1
       class="display-4 d-flex justify-content-between align-items-center mb-4"
     >
@@ -19,7 +19,7 @@
           <th scope="col">編輯</th>
         </thead>
         <tbody>
-          <tr v-for="item in products" :key="item.id">
+          <tr v-for="item in adminProducts" :key="item.id">
             <td class="align-middle" width="72">
               <img class="img-fluid" :src="item.image" />
             </td>
@@ -56,12 +56,12 @@
       </table>
     </div>
     <Pagination
-      v-if="totalPages > 1"
+      v-if="adminPagination.totalPages > 1"
       class="mt-5"
-      :pages="totalPages"
-      :current="currentPage"
-      :hasPrev="hasPrev"
-      :hasNext="hasNext"
+      :pages="adminPagination.totalPages"
+      :current="adminPagination.currentPage"
+      :hasPrev="adminPagination.hasPrev"
+      :hasNext="adminPagination.hasNext"
       @getPage="getProducts"
     />
   </div>
@@ -70,150 +70,90 @@
 <script>
 import ProductModal from "@/components/ProductModal";
 import Pagination from "@/components/Pagination";
-import { SET_LOADING } from "@/store/modules/mutation-types";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
+  name: "ProductsList",
   data() {
-    return {
-      products: [],
-      totalPages: 1,
-      currentPage: 1,
-      hasPrev: false,
-      hasNext: false,
-    };
+    return {};
   },
   components: {
     ProductModal,
     Pagination,
   },
+  computed: {
+    ...mapGetters([
+      "adminProducts",
+      "adminPagination",
+      "adminProductsMsg",
+      "adminProductsMsgType",
+    ]),
+  },
   methods: {
-    getProducts(page = 1) {
-      this.$store.commit(SET_LOADING, true);
-      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/products?page=${page}`;
-      this.$http
-        .get(path)
-        .then((res) => {
-          console.log(path, res.data);
-          if (res.data.success) {
-            this.products = res.data.products;
-            if (res.data.pagination) {
-              this.totalPages = res.data.pagination.total_pages;
-              this.currentPage = res.data.pagination.current_page;
-              this.hasPrev = res.data.pagination.has_pre;
-              this.hasNext = res.data.pagination.has_next;
-            }
-          } else {
-            this.$notify({
-              group: "alert",
-              title: "取得產品列表失敗",
-              text: res.data.message,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$notify({
-            group: "alert",
-            title: "無法取得產品列表",
-            text: err.message,
-            type: "error",
-          });
-        })
-        .finally(() => {
-          this.$store.commit(SET_LOADING, false);
+    ...mapActions(["startLoading", "endLoading"]),
+    async getProducts(page = 1) {
+      this.startLoading();
+      await this.$store.dispatch("fetchAdminProducts", page);
+      this.endLoading();
+      if (this.adminProductsMsg) {
+        this.$notify({
+          group: "alert",
+          title: "取得產品列表失敗",
+          text: this.adminProductsMsg,
+          type: this.adminProductsMsgType,
         });
-    },
-
-    openModal(item) {
-      this.$refs.bookModal.show(item);
-    },
-
-    updateProduct(item) {
-      // console.log(item);
-      this.$store.commit(SET_LOADING, true);
-      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product`;
-      let method = "post";
-      const isNew = item.id ? false : true;
-      const vm = this;
-      if (!isNew) {
-        path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
-        method = "put";
       }
-      this.$http[method](path, { data: item })
-        .then((res) => {
-          // console.log(res.data);
-          if (res.data.success) {
-            vm.getProducts();
-            this.$notify({
-              group: "alert",
-              title: "上傳成功",
-              text: res.data.message,
-              type: "success",
-            });
-          } else {
-            this.$notify({
-              group: "alert",
-              title: "上傳失敗",
-              text: res.data.message,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$notify({
-            group: "alert",
-            title: "上傳失敗",
-            text: err.message,
-            type: "error",
-          });
-        })
-        .finally(() => {
-          vm.$refs.bookModal.hide();
-          vm.$store.commit(SET_LOADING, false);
+    },
+    openModal(item) {
+      this.$refs.productModal.show(item);
+    },
+    async updateProduct(item) {
+      this.startLoading();
+      await this.$store.dispatch("updateAdminProduct", item);
+      this.$refs.productModal.hide();
+      if (this.adminProductsMsg) {
+        const title =
+          this.adminProductsMsgType === "error" ? "上傳失敗" : "上傳成功";
+        this.$notify({
+          group: "alert",
+          title: title,
+          text: this.adminProductsMsg,
+          type: this.adminProductsMsgType,
+          duration: 2000,
         });
+      }
+      if (this.adminProductsMsgType === "success") {
+        setTimeout(() => {
+          this.getProducts(this.adminPagination.currentPage);
+        }, 2000);
+      }
+      this.endLoading();
     },
 
-    deleteProduct(item) {
-      this.$store.commit(SET_LOADING, true);
-      const vm = this;
-      let path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/product/${item.id}`;
-      console.log(item);
+    async deleteProduct(item) {
       const confirmResult = confirm(`確定要刪除 ${item.title} 這項產品嗎？`);
       if (!confirmResult) {
         return;
       }
-      this.$http
-        .delete(path)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.success) {
-            vm.getProducts();
-            this.$notify({
-              group: "alert",
-              title: "刪除成功",
-              text: res.data.message,
-              type: "success",
-            });
-          } else {
-            this.$notify({
-              group: "alert",
-              title: "刪除失敗",
-              text: res.data.message,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$notify({
-            group: "alert",
-            title: "刪除失敗",
-            text: err.message,
-            type: "error",
-          });
-        })
-        .finally(() => {
-          vm.$store.commit(SET_LOADING, false);
+      this.startLoading();
+      await this.$store.dispatch("deleteAdminProduct", item);
+      if (this.adminProductsMsg) {
+        const title =
+          this.adminProductsMsgType === "error" ? "刪除失敗" : "刪除成功";
+        this.$notify({
+          group: "alert",
+          title: title,
+          text: this.adminProductsMsg,
+          type: this.adminProductsMsgType,
+          duration: 2000,
         });
+      }
+      if (this.adminProductsMsgType === "success") {
+        setTimeout(() => {
+          this.getProducts(this.adminPagination.currentPage);
+        }, 2000);
+      }
+      this.endLoading();
     },
   },
 
