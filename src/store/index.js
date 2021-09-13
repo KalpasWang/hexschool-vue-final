@@ -5,6 +5,7 @@ import Products from './modules/products';
 import ProductDetails from './modules/productsDetails';
 import Cart from './modules/cart';
 import Admin from './modules/admin';
+import Orders from './modules/orders';
 
 Vue.use(Vuex);
 
@@ -18,5 +19,6 @@ export default new Vuex.Store({
     ProductDetails,
     Cart,
     Admin,
+    Orders,
   },
 });

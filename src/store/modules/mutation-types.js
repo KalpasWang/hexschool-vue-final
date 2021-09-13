@@ -25,3 +25,9 @@ export const SET_ALL_ADMIN_PRODUCTS = 'setAllAdminProducts';
 export const SET_ADMIN_PRODUCTS_MSG = 'setAdminProductsMsg';
 export const SET_ADMIN_PRODUCTS_MSG_TYPE = 'setAdminProductsMsgType';
 export const SET_ADMIN_PAGINATION = 'setAdminPagination';
+
+// orders
+export const SET_ORDERS = 'setOrders';
+export const SET_ORDERS_MSG = 'setOrdersMsg';
+export const SET_ORDERS_MSG_TYPE = 'setOrdersMsgType';
+export const SET_ORDERS_PAGINATION = 'setOrdersPagination';
