@@ -6,7 +6,7 @@ import DashBoard from '@/views/DashBoard';
 import Login from '@/views/Login';
 import ProductsList from '@/views/ProductsList';
 import OrdersList from '@/views/OrdersList';
-import Coupons from '@/views/Coupons';
+import CouponsList from '@/views/CouponsList';
 import OrderingSimulation from '@/views/OrderingSimulation';
 import ProductsSimulation from '@/views/ProductsSimulation';
 import ProductDetailsSimulation from '@/views/ProductDetailsSimulation';
@@ -39,8 +39,8 @@ const routes = [
       },
       {
         path: 'coupons',
-        name: 'Coupons',
-        component: Coupons,
+        name: 'CouponsList',
+        component: CouponsList,
       },
       {
         path: 'simulateOrdering',

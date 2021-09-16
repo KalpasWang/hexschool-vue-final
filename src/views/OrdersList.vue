@@ -2,8 +2,8 @@
   <div>
     <h1 class="display-4 mb-4">訂單列表</h1>
     <div class="table-responsive">
-      <table class="table shadow-sm bg-white mt-4">
-        <thead>
+      <table class="table table-hover border border-secondary">
+        <thead class="bg-secondary">
           <tr>
             <th>購買時間</th>
             <th>Email</th>

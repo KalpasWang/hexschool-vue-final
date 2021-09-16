@@ -31,3 +31,9 @@ export const SET_ORDERS = 'setOrders';
 export const SET_ORDERS_MSG = 'setOrdersMsg';
 export const SET_ORDERS_MSG_TYPE = 'setOrdersMsgType';
 export const SET_ORDERS_PAGINATION = 'setOrdersPagination';
+
+// coupons
+export const SET_COUPONS = 'setCoupons';
+export const SET_COUPONS_MSG = 'setCouponsMsg';
+export const SET_COUPONS_MSG_TYPE = 'setCouponsMsgType';
+export const SET_COUPONS_PAGINATION = 'setCouponsPagination';

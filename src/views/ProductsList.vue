@@ -4,7 +4,7 @@
     <h1
       class="display-4 d-flex justify-content-between align-items-center mb-4"
     >
-      所有產品
+      產品列表
       <button @click="openModal({})" class="btn btn-primary">新增產品</button>
     </h1>
     <div class="table-responsive">

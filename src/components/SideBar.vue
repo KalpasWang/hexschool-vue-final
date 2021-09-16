@@ -41,7 +41,10 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'Coupons' }" class="nav-link text-start">
+          <router-link
+            :to="{ name: 'CouponsList' }"
+            class="nav-link text-start"
+          >
             <trending-down-icon size="1.5x"></trending-down-icon>
             優惠券
           </router-link>
