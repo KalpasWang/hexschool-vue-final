@@ -4,7 +4,7 @@ import Loading from './modules/loading';
 import Products from './modules/products';
 import ProductDetails from './modules/productsDetails';
 import Cart from './modules/cart';
-import Admin from './modules/admin';
+import AdminProducts from './modules/adminProducts';
 import Orders from './modules/orders';
 import Coupons from './modules/coupons';
 
@@ -19,7 +19,7 @@ export default new Vuex.Store({
     Products,
     ProductDetails,
     Cart,
-    Admin,
+    AdminProducts,
     Orders,
     Coupons,
   },

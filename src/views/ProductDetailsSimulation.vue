@@ -83,16 +83,18 @@ export default {
     ]),
   },
   methods: {
-    addToCart(id, qty) {
-      this.$store.dispatch("postProductToCart", { id, qty }).finally(() => {
-        if (this.cartMsg) {
-          this.$notify({
-            group: "alert",
-            title: this.cartMsg,
-            type: this.cartMsgType,
-          });
-        }
-      });
+    async addToCart(id, qty) {
+      await this.$store.dispatch("postProductToCart", { id, qty });
+      if (this.cartMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.cartMsg,
+          type: this.cartMsgType,
+        });
+      }
+      if (this.cartMsgType === "success") {
+        this.$store.dispatch("getCart");
+      }
     },
   },
   created() {

@@ -76,15 +76,30 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["allProducts", "allProductsErrorMsg"]),
+    ...mapGetters([
+      "allProducts",
+      "allProductsErrorMsg",
+      "cartMsg",
+      "cartMsgType",
+    ]),
   },
 
   methods: {
     getProducts() {
       this.$store.dispatch("fetchAllProducts");
     },
-    addToCart(id) {
-      this.$store.dispatch("postProductToCart", { id, qty: 1 });
+    async addToCart(id) {
+      await this.$store.dispatch("postProductToCart", { id, qty: 1 });
+      if (this.cartMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.cartMsg,
+          type: this.cartMsgType,
+        });
+      }
+      if (this.cartMsgType === "success") {
+        this.$store.dispatch("getCart");
+      }
     },
   },
 

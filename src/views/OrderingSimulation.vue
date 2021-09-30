@@ -2,7 +2,7 @@
   <div class="container">
     <div class="dropdown mt-4 mb-3">
       <button
-        v-if="cart.carts"
+        v-if="cart"
         @click.stop="toggleDropdown()"
         class="
           btn btn-success
@@ -14,17 +14,15 @@
         "
       >
         <shopping-cart-icon size="4x" class="icon-lg"></shopping-cart-icon>
-        <span class="align-middle font-monospace">
-          ({{ cart.carts.length }})
-        </span>
+        <span class="align-middle font-monospace"> ({{ cart.length }}) </span>
       </button>
       <ul
-        v-if="cart.carts && cart.carts.length"
+        v-if="cart.length"
         :class="{ show: isDropdownShow }"
         @click.stop=""
         class="dropdown-menu shadow-sm"
       >
-        <li v-for="item in cart.carts" :key="item.id" class="dropdown-item">
+        <li v-for="item in cart" :key="item.id" class="dropdown-item">
           <span class="d-inline-block me-1">
             <trash-2-icon
               size="5x"
@@ -75,26 +73,37 @@ export default {
     ...mapGetters(["cart", "cartMsg", "cartMsgType", "isDropdownShow"]),
   },
   methods: {
-    ...mapActions([
-      "startLoading",
-      "endLoading",
-      "showDropdown",
-      "closeDropdown",
-    ]),
+    ...mapActions(["showDropdown", "closeDropdown"]),
     toggleDropdown() {
       this.isDropdownShow ? this.closeDropdown() : this.showDropdown();
     },
-    deleteItemInCart(item) {
-      this.startLoading();
-      this.$store.dispatch("deleteProductInCart", item.id).finally(() => {
+    async getCart() {
+      await this.$store.dispatch("getCart");
+      if (this.cartMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.cartMsg,
+          type: this.cartMsgType,
+        });
+      }
+    },
+    async deleteItemInCart(item) {
+      await this.$store.dispatch("deleteProductInCart", item.id);
+      if (this.cartMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.cartMsg,
+          type: this.cartMsgType,
+        });
+      }
+      if (this.cartMsgType === "success") {
         this.$store.dispatch("getCart");
-        this.endLoading();
-      });
+      }
     },
   },
   mounted() {
     this.closeDropdown();
-    this.$store.dispatch("getCart");
+    this.getCart();
   },
 };
 </script>

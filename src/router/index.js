@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import axios from 'axios';
 import Home from '@/views/Home';
 import DashBoard from '@/views/DashBoard';
 import Login from '@/views/Login';
@@ -89,11 +88,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log('to', to);
+  // console.log('to', to);
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const path = `${process.env.VUE_APP_API_PATH}/api/user/check`;
-    axios.post(path).then((res) => {
-      console.log(path, res.data);
+    console.log('has auth');
+    const path = `${router.app.$apiPath}/api/user/check`;
+    // console.log('path', path);
+    router.app.$http.post(path).then((res) => {
+      console.log('res.data', res.data);
       if (res.data.success) {
         next();
       } else {
