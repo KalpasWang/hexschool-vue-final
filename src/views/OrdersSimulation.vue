@@ -9,8 +9,8 @@
             <th>數量</th>
             <th>單價</th>
           </thead>
-          <tbody v-if="cart.carts && cart.carts.length">
-            <tr v-for="item in cart.carts" :key="item.id">
+          <tbody v-if="cart && cart.length">
+            <tr v-for="item in cart" :key="item.id">
               <td>
                 <trash-2-icon
                   size="5x"
@@ -29,11 +29,11 @@
           <tfoot class="fw-bold">
             <tr>
               <td colspan="3" class="text-end">總計</td>
-              <td>{{ cart.total }}</td>
+              <td>{{ cartTotal.total }}</td>
             </tr>
-            <tr v-if="cart.final_total !== cart.total">
+            <tr v-if="cartTotal.final_total !== cartTotal.total">
               <td colspan="3" class="text-success text-end">折扣價</td>
-              <td class="text-success">{{ cart.final_total }}</td>
+              <td class="text-success">{{ cartTotal.final_total }}</td>
             </tr>
           </tfoot>
         </table>
@@ -149,7 +149,7 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { Trash2Icon } from "vue-feather-icons";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "OrdersSimulation",
@@ -173,42 +173,35 @@ export default {
     Trash2Icon,
   },
   computed: {
-    ...mapGetters(["cart", "cartMsg", "cartMsgType"]),
+    ...mapGetters(["cart", "cartTotal", "cartMsg", "cartMsgType"]),
   },
   methods: {
-    ...mapActions(["startLoading", "endLoading"]),
-    deleteItemInCart(item) {
-      this.startLoading();
-      this.$store.dispatch("deleteProductInCart", item.id).finally(() => {
+    async deleteItemInCart(item) {
+      await this.$store.dispatch("deleteProductInCart", item.id);
+      if (this.cartMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.cartMsg,
+          type: this.cartMsgType,
+        });
+      }
+      if (this.cartMsgType === "success") {
         this.$store.dispatch("getCart");
-        this.endLoading();
-      });
+      }
     },
-    addCouponCode() {
-      const url = `${this.$apiPath}/api/${this.$apiParams}/coupon`;
-      const coupon = {
-        code: this.coupon_code,
-      };
-      this.startLoading();
-      this.$http.post(url, { data: coupon }).then((res) => {
-        // console.log(res);
-        if (res.data.success) {
-          this.coupon_code = "";
-          this.$store.dispatch("getCart");
-        } else {
-          this.$notify({
-            group: "alert",
-            title: "發生錯誤",
-            text: res.data.message,
-            type: "error",
-          });
-        }
-        this.endLoading();
-      });
+    async addCouponCode() {
+      await this.$store.dispatch("addCouponCode", this.coupon_code);
+      if (this.cartMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.cartMsg,
+          type: this.cartMsgType,
+        });
+      } else {
+        this.$store.dispatch("getCart");
+      }
     },
     async onSubmit() {
-      console.log("submit");
-      this.startLoading();
       const orderId = await this.$store.dispatch("createNewOrder", this.form);
       if (this.cartMsgType === "error") {
         this.$notify({
@@ -220,7 +213,6 @@ export default {
       if (this.cartMsgType === "success") {
         this.$router.push({ name: "CheckoutSimulation", params: { orderId } });
       }
-      this.endLoading();
     },
   },
   created() {

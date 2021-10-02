@@ -142,22 +142,25 @@ export default {
         commit(SET_LOADING, false);
       }
     },
-    async addCouponCode({ commit }) {
+    async addCouponCode({ commit }, code) {
       const apiPath = this._vm.$apiPath;
       const apiParams = this._vm.$apiParams;
       const path = `${apiPath}/api/${apiParams}/coupon`;
-      const coupon = {
-        code: this.coupon_code,
-      };
 
       try {
         commit(SET_CART_MSG, '');
-        const res = await this._vm.$http.post(path, { data: coupon });
+        commit(SET_CART_MSG_TYPE, '');
+        commit(SET_LOADING, true);
+        const res = await this._vm.$http.post(path, { data: { code } });
         console.log(res);
+        if (!res.data.success) {
+          throw new Error(res.data.message);
+        }
       } catch (error) {
-        commit(SET_CART_MSG, `發生錯誤${error}`);
+        commit(SET_CART_MSG, error.message);
         commit(SET_CART_MSG_TYPE, 'error');
       }
+      commit(SET_LOADING, false);
     },
     async createNewOrder({ commit }, form) {
       const apiPath = this._vm.$apiPath;
@@ -166,18 +169,21 @@ export default {
 
       try {
         commit(SET_CART_MSG, '');
+        commit(SET_CART_MSG_TYPE, '');
+        commit(SET_LOADING, true);
         const res = await this._vm.$http.post(path, { data: form });
         if (res.data.success) {
-          commit(SET_CART_MSG, '訂單已建立');
+          commit(SET_CART_MSG, res.data.message);
           commit(SET_CART_MSG_TYPE, 'success');
+          commit(SET_LOADING, false);
           return res.data.orderId;
         } else {
-          commit(SET_CART_MSG, '訂單無效，請在試試看');
-          commit(SET_CART_MSG_TYPE, 'error');
+          throw new Error(res.data.message);
         }
       } catch (error) {
-        commit(SET_CART_MSG, `發生錯誤${error}`);
+        commit(SET_CART_MSG, error.message);
         commit(SET_CART_MSG_TYPE, 'error');
+        commit(SET_LOADING, false);
       }
       return false;
     },
