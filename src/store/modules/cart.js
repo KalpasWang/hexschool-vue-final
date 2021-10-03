@@ -187,41 +187,53 @@ export default {
       }
       return false;
     },
-    async getOrder({ commit }, id) {
+    async getCustomerOrder({ commit }, id) {
       const apiPath = this._vm.$apiPath;
       const apiParams = this._vm.$apiParams;
       const path = `${apiPath}/api/${apiParams}/order/${id}`;
 
       try {
         commit(SET_CART_MSG, '');
+        commit(SET_CART_MSG_TYPE, '');
         commit(SET_CUSTOMER_ORDER, {});
+        commit(SET_LOADING, true);
         const res = await this._vm.$http.get(path);
-        commit(SET_CART_MSG, '訂單建立成功');
-        commit(SET_CART_MSG_TYPE, 'success');
-        commit(SET_CUSTOMER_ORDER, res.data.order);
+        if (res.data.success) {
+          commit(SET_CART_MSG, res.data.message);
+          commit(SET_CART_MSG_TYPE, 'success');
+          commit(SET_CUSTOMER_ORDER, res.data.order);
+          commit(SET_LOADING, false);
+        } else {
+          throw new Error(res.data.message);
+        }
       } catch (error) {
-        commit(SET_CART_MSG, `發生錯誤：${error}`);
+        commit(SET_CART_MSG, error.message);
         commit(SET_CART_MSG_TYPE, 'error');
+        commit(SET_LOADING, false);
       }
     },
-    async payOrder({ commit }, id) {
+    async payCustomerOrder({ commit }, id) {
       const apiPath = this._vm.$apiPath;
       const apiParams = this._vm.$apiParams;
       const path = `${apiPath}/api/${apiParams}/pay/${id}`;
 
       try {
         commit(SET_CART_MSG, '');
+        commit(SET_CART_MSG_TYPE, '');
+        commit(SET_LOADING, true);
         const res = await this._vm.$http.post(path);
         console.log(res);
         if (res.data.success) {
           commit(SET_CART_MSG, res.data.message);
           commit(SET_CART_MSG_TYPE, 'success');
+          commit(SET_LOADING, false);
         } else {
-          throw new Error('付款失敗');
+          throw new Error(res.data.message);
         }
       } catch (error) {
         commit(SET_CART_MSG, error.message);
         commit(SET_CART_MSG_TYPE, 'error');
+        commit(SET_LOADING, false);
       }
     },
   },

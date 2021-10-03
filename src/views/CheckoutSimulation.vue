@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "CheckoutSimulation",
@@ -67,13 +67,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["order", "cartMsg", "cartMsgType"]),
+    ...mapGetters({
+      order: "customerOrder",
+      cartMsg: "cartMsg",
+      cartMsgType: "cartMsgType",
+    }),
   },
   methods: {
-    ...mapActions(["startLoading", "endLoading"]),
     async getOrder() {
-      this.startLoading();
-      await this.$store.dispatch("getOrder", this.orderId);
+      await this.$store.dispatch("getCustomerOrder", this.orderId);
       if (this.cartMsgType === "error") {
         this.$notify({
           group: "alert",
@@ -81,11 +83,9 @@ export default {
           type: this.cartMsgType,
         });
       }
-      this.endLoading();
     },
     async payOrder() {
-      this.startLoading();
-      await this.$store.dispatch("payOrder", this.orderId);
+      await this.$store.dispatch("payCustomerOrder", this.orderId);
       if (this.cartMsgType === "success") {
         this.getOrder();
       } else {
@@ -95,7 +95,6 @@ export default {
           type: this.cartMsgType,
         });
       }
-      this.endLoading();
     },
   },
   created() {
