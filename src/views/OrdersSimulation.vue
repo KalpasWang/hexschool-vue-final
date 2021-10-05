@@ -23,7 +23,14 @@
                 <div class="text-success" v-if="item.coupon">已套用優惠券</div>
               </td>
               <td>{{ item.qty }}/{{ item.product.unit || "個" }}</td>
-              <td>{{ item.final_total }}</td>
+              <td v-if="item.total === item.final_total">
+                {{ item.final_total }}
+              </td>
+              <td v-else>
+                <del>{{ item.total }}</del
+                ><br />
+                <span>{{ item.final_total | ceil }}</span>
+              </td>
             </tr>
           </tbody>
           <tfoot class="fw-bold">
@@ -33,7 +40,7 @@
             </tr>
             <tr v-if="cartTotal.final_total !== cartTotal.total">
               <td colspan="3" class="text-success text-end">折扣價</td>
-              <td class="text-success">{{ cartTotal.final_total }}</td>
+              <td class="text-success">{{ cartTotal.final_total | ceil }}</td>
             </tr>
           </tfoot>
         </table>

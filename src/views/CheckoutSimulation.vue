@@ -11,13 +11,13 @@
           <tr v-for="item in order.products" :key="item.id">
             <td>{{ item.product.title }}</td>
             <td>{{ item.qty }}/{{ item.product.unit || "個" }}</td>
-            <td>{{ item.final_total }}</td>
+            <td>{{ item.final_total | ceil }}</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <td colspan="2" class="text-end">總計</td>
-            <td>{{ order.total }}</td>
+            <td>{{ order.total | ceil }}</td>
           </tr>
         </tfoot>
       </table>

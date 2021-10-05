@@ -7,6 +7,7 @@ import axios from 'axios';
 import Notifications from 'vue-notification';
 import currencyFilter from './filters/currency';
 import dateFilter from './filters/date';
+import ceilFilter from './filters/ceil';
 import './validation/rules';
 
 Vue.config.productionTip = false;
@@ -23,6 +24,7 @@ Vue.use(VueAxios, axios);
 Vue.use(Notifications);
 Vue.filter('currency', currencyFilter);
 Vue.filter('date', dateFilter);
+Vue.filter('ceil', ceilFilter);
 
 new Vue({
   router,

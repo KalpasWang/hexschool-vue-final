@@ -43,7 +43,7 @@
           <span class="px-2"
             >{{ item.qty }}/{{ item.product.unit || "個" }}</span
           >
-          <span>{{ item.final_total }}</span>
+          <span>{{ item.final_total | ceil }}</span>
         </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
