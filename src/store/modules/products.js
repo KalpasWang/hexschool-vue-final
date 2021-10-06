@@ -1,19 +1,18 @@
 import {
   SET_PRODUCTS,
-  SET_PRODUCTS_ERROR_MSG,
+  SET_PRODUCTS_MSG,
   SET_ALL_PRODUCTS,
-  SET_ALL_PRODUCTS_ERROR_MSG,
+  SET_ALL_PRODUCTS_MSG,
   SET_PAGINATION,
   SET_LOADING,
 } from './mutation-types';
-import Axios from 'axios';
 
 export default {
   state: () => ({
     products: [],
-    productsErrorMsg: '',
+    productsMsg: '',
     allProducts: [],
-    allProductsErrorMsg: '',
+    allProductsMsg: '',
     pagination: {
       totalPages: 1,
       currentPage: 1,
@@ -26,14 +25,14 @@ export default {
     products(state) {
       return state.products;
     },
-    productsErrotMsg(state) {
-      return state.productsErrotMsg;
+    productsMsg(state) {
+      return state.productsMsg;
     },
     allProducts(state) {
       return state.allProducts;
     },
-    allProductsErrorMsg(state) {
-      return state.allProductsErrorMsg;
+    allProductsMsg(state) {
+      return state.allProductsMsg;
     },
     pagination(state) {
       return state.pagination;
@@ -45,16 +44,16 @@ export default {
       state.products = value;
     },
 
-    [SET_PRODUCTS_ERROR_MSG](state, value) {
-      state.productsErrorMsg = value;
+    [SET_PRODUCTS_MSG](state, value) {
+      state.productsMsg = value;
     },
 
     [SET_ALL_PRODUCTS](state, value) {
       state.allProducts = value;
     },
 
-    [SET_ALL_PRODUCTS_ERROR_MSG](state, value) {
-      state.allProductsErrorMsg = value;
+    [SET_ALL_PRODUCTS_MSG](state, value) {
+      state.allProductsMsg = value;
     },
 
     [SET_PAGINATION](state, obj) {
@@ -66,51 +65,49 @@ export default {
   },
 
   actions: {
-    fetchProducts({ commit, state }, page = 1) {
-      if (state.products.length > 0 && state.pagination.currentPage === page) {
-        return;
+    async fetchProducts({ commit }, page = 1) {
+      const apiPath = this._vm.$apiPath;
+      const apiParams = this._vm.$apiParams;
+      const path = `${apiPath}/api/${apiParams}/products?page=${page}`;
+
+      try {
+        commit(SET_PRODUCTS_MSG, '');
+        commit(SET_LOADING, true);
+        const res = await this._vm.$http.get(path);
+        console.log(res.data);
+        if (res.data.success) {
+          commit(SET_PRODUCTS, res.data.products);
+          commit(SET_PAGINATION, res.data.pagination);
+          commit(SET_LOADING, false);
+        } else {
+          throw new Error(res.data.message);
+        }
+      } catch (error) {
+        commit(SET_PRODUCTS_MSG, error.message);
+        commit(SET_LOADING, false);
       }
-      commit(SET_LOADING, true);
-      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/products?page=${page}`;
-      Axios.get(path)
-        .then((res) => {
-          console.log(path, res.data);
-          if (res.data.success) {
-            commit(SET_PRODUCTS, res.data.products);
-            commit(SET_PAGINATION, res.data.pagination);
-            commit(SET_PRODUCTS_ERROR_MSG, '');
-          } else {
-            commit(SET_PRODUCTS_ERROR_MSG, '無法取得產品列表！請再試試看');
-          }
-          commit(SET_LOADING, false);
-        })
-        .catch(() => {
-          commit(SET_PRODUCTS_ERROR_MSG, '無法取得產品列表！請再試試看');
-          commit(SET_LOADING, false);
-        });
     },
 
-    fetchAllProducts({ commit, state }) {
-      if (state.allProducts.length > 0) {
-        return;
+    async fetchAllProducts({ commit }) {
+      const apiPath = this._vm.$apiPath;
+      const apiParams = this._vm.$apiParams;
+      const path = `${apiPath}/api/${apiParams}/products/all`;
+
+      try {
+        commit(SET_ALL_PRODUCTS_MSG, '');
+        commit(SET_LOADING, true);
+        const res = await this._vm.$http.get(path);
+        console.log(res.data);
+        if (res.data.success) {
+          commit(SET_ALL_PRODUCTS, res.data.products.reverse());
+          commit(SET_LOADING, false);
+        } else {
+          throw new Error(res.data.message);
+        }
+      } catch (error) {
+        commit(SET_ALL_PRODUCTS_MSG, error.message);
+        commit(SET_LOADING, false);
       }
-      commit(SET_LOADING, true);
-      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/products/all`;
-      Axios.get(path)
-        .then((res) => {
-          console.log(path, res.data);
-          if (res.data.success) {
-            commit(SET_ALL_PRODUCTS, res.data.products.reverse());
-            commit(SET_ALL_PRODUCTS_ERROR_MSG, '');
-          } else {
-            commit(SET_ALL_PRODUCTS_ERROR_MSG, '無法取得產品列表！請再試試看');
-          }
-          commit(SET_LOADING, false);
-        })
-        .catch(() => {
-          commit(SET_ALL_PRODUCTS_ERROR_MSG, '無法取得產品列表！請再試試看');
-          commit(SET_LOADING, false);
-        });
     },
   },
 };

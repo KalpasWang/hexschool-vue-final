@@ -1,6 +1,8 @@
 <template>
   <div class="container p-4">
-    <div v-if="productDetailsErrorMsg">{{ productDetailsErrorMsg }}</div>
+    <div v-if="productDetailsMsg" class="h2 text-center text-danger mt-4">
+      {{ productDetailsMsg }}
+    </div>
     <div
       v-else
       v-cloak
@@ -77,12 +79,22 @@ export default {
   computed: {
     ...mapGetters([
       "productDetails",
-      "productDetailsErrorMsg",
+      "productDetailsMsg",
       "cartMsg",
       "cartMsgType",
     ]),
   },
   methods: {
+    async getProductDetails() {
+      await this.$store.dispatch("fetchProductDetails", this.$route.params.id);
+      if (this.productDetailsMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.productDetailsMsg,
+          type: "error",
+        });
+      }
+    },
     async addToCart(id, qty) {
       await this.$store.dispatch("postProductToCart", { id, qty });
       if (this.cartMsg) {
@@ -97,10 +109,9 @@ export default {
       }
     },
   },
-  created() {
-    console.log("details created");
-    console.log(this.$route.params.id);
-    this.$store.dispatch("fetchProductDetails", this.$route.params.id);
+  async created() {
+    // console.log(this.$route.params.id);
+    this.getProductDetails();
   },
 };
 </script>

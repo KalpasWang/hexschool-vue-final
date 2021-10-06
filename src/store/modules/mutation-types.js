@@ -3,14 +3,14 @@ export const SET_LOADING = 'setLoading';
 
 // products
 export const SET_PRODUCTS = 'setProducts';
-export const SET_PRODUCTS_ERROR_MSG = 'setProductsErrorMsg';
+export const SET_PRODUCTS_MSG = 'setProductsMsg';
 export const SET_ALL_PRODUCTS = 'setAllProducts';
-export const SET_ALL_PRODUCTS_ERROR_MSG = 'setAllProductsErrorMsg';
+export const SET_ALL_PRODUCTS_MSG = 'setAllProductsMsg';
 export const SET_PAGINATION = 'setPagination';
 
 // products details
 export const SET_PRODUCT_DETAILS = 'setProductDetails';
-export const SET_PRODUCT_DETAILS_ERROR_MSG = 'setProductDetailsErrorMsg';
+export const SET_PRODUCT_DETAILS_MSG = 'setProductDetailsMsg';
 
 // cart
 export const SET_CART = 'setCart';

@@ -2,7 +2,9 @@
   <div class="container">
     <h2>產品列表</h2>
     <div class="row mt-4">
-      <div v-if="allProductsErrorMsg">{{ allProductsErrotMsg }}</div>
+      <div v-if="allProductsMsg" class="h2 text-center text-danger mt-4">
+        {{ allProductsMsg }}
+      </div>
       <div
         class="col-md-4 col-sm-6 mb-4"
         v-else
@@ -76,17 +78,19 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      "allProducts",
-      "allProductsErrorMsg",
-      "cartMsg",
-      "cartMsgType",
-    ]),
+    ...mapGetters(["allProducts", "allProductsMsg", "cartMsg", "cartMsgType"]),
   },
 
   methods: {
-    getProducts() {
-      this.$store.dispatch("fetchAllProducts");
+    async getProducts() {
+      await this.$store.dispatch("fetchAllProducts");
+      if (this.allProductsMsg) {
+        this.$notify({
+          group: "alert",
+          title: this.allProductsMsg,
+          type: "error",
+        });
+      }
     },
     async addToCart(id) {
       await this.$store.dispatch("postProductToCart", { id, qty: 1 });
