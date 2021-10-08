@@ -52,7 +52,7 @@
 
 <script>
 import Pagination from "@/components/Pagination";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "OrdersList",
@@ -65,7 +65,7 @@ export default {
   computed: {
     ...mapGetters(["orders", "ordersPagination", "ordersMsg", "ordersMsgType"]),
     sortedOrders() {
-      return this.orders.slice(0).sort((a, b) => {
+      return this.orders.slice().sort((a, b) => {
         const aIsPaid = a.is_paid ? 1 : 0;
         const bIsPaid = b.is_paid ? 1 : 0;
         return bIsPaid - aIsPaid;
@@ -73,16 +73,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["startLoading", "endLoading"]),
     async getOrders(page = 1) {
-      this.startLoading();
       await this.$store.dispatch("fetchOrders", page);
-      this.endLoading();
       if (this.ordersMsg) {
         this.$notify({
           group: "alert",
-          title: "取得訂單列表失敗",
-          text: this.ordersMsg,
+          title: this.ordersMsg,
           type: this.ordersMsgType,
         });
       }

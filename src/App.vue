@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="text-center fw-normal">
     <Loading :active.sync="isLoading"></Loading>
     <router-view />
     <notifications group="alert" />
@@ -19,33 +19,17 @@ export default {
   components: {
     Loading,
   },
-  methods: {
-    closeDropdown() {
-      console.log(this.$refs);
-      if (this.$refs.simuDropdown) {
-        this.$refs.simuDropdown.classList.remove("show");
-      }
-    },
-  },
 };
 </script>
 
 <style lang="scss">
 @import "./assets/scss/all";
+
 html,
 body {
   width: 100%;
   height: 100%;
   min-height: 100vh;
-}
-
-#app {
-  // font-family: Avenir, Helvetica, Arial, sans-serif;
-  // -webkit-font-smoothing: antialiased;
-  // -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  // color: #2c3e50;
-  font-weight: 400;
 }
 
 .notification-title {

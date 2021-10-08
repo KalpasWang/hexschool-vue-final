@@ -79,10 +79,10 @@ export default {
         if (res.data.success) {
           commit(SET_ADMIN_PRODUCTS, res.data.products);
           commit(SET_ADMIN_PAGINATION, res.data.pagination);
+          commit(SET_LOADING, false);
         } else {
           throw new Error(res.data.message);
         }
-        commit(SET_LOADING, false);
       } catch (error) {
         commit(SET_ADMIN_PRODUCTS_MSG, error.message);
         commit(SET_ADMIN_PRODUCTS_MSG_TYPE, 'error');
@@ -103,10 +103,10 @@ export default {
         console.log(res.data);
         if (res.data.success) {
           commit(SET_ALL_ADMIN_PRODUCTS, res.data.products.reverse());
+          commit(SET_LOADING, false);
         } else {
           throw new Error(res.data.message);
         }
-        commit(SET_LOADING, false);
       } catch (error) {
         commit(SET_ADMIN_PRODUCTS_MSG, error.message);
         commit(SET_ADMIN_PRODUCTS_MSG_TYPE, 'error');
@@ -131,10 +131,10 @@ export default {
         if (res.data.success) {
           commit(SET_ADMIN_PRODUCTS_MSG, res.data.message);
           commit(SET_ADMIN_PRODUCTS_MSG_TYPE, 'success');
+          commit(SET_LOADING, false);
         } else {
           throw new Error(res.data.message);
         }
-        commit(SET_LOADING, false);
       } catch (error) {
         commit(SET_ADMIN_PRODUCTS_MSG, error.message);
         commit(SET_ADMIN_PRODUCTS_MSG_TYPE, 'error');
@@ -156,10 +156,10 @@ export default {
         if (res.data.success) {
           commit(SET_ADMIN_PRODUCTS_MSG, res.data.message);
           commit(SET_ADMIN_PRODUCTS_MSG_TYPE, 'success');
+          commit(SET_LOADING, false);
         } else {
           throw new Error(res.data.message);
         }
-        commit(SET_LOADING, false);
       } catch (error) {
         commit(SET_ADMIN_PRODUCTS_MSG, error.message);
         commit(SET_ADMIN_PRODUCTS_MSG_TYPE, 'error');

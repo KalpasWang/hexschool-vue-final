@@ -130,8 +130,4 @@ export default {
   white-space: pre-wrap;
   line-height: 1.5;
 }
-
-[v-cloak] {
-  display: none;
-}
 </style>

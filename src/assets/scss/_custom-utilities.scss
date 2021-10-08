@@ -1,5 +1,5 @@
 $utilities: (
-  "z-index": (
+  'z-index': (
     property: z-index,
     class: z,
     values: (
@@ -10,13 +10,13 @@ $utilities: (
       1000: 1000,
     ),
   ),
-  "cursor": (
+  'cursor': (
     property: cursor,
     class: cursor,
     values: (
       pointer: pointer,
     ),
-  )
+  ),
 );
 
 .icon-lg {
@@ -31,4 +31,12 @@ $utilities: (
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.show {
+  display: block !important;
 }

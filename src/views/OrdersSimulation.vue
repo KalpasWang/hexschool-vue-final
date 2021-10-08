@@ -14,7 +14,8 @@
               <td>
                 <trash-2-icon
                   size="5x"
-                  class="icon-lg text-danger cursor-pointer"
+                  role="button"
+                  class="icon-lg text-danger"
                   @click.stop="deleteItemInCart(item)"
                 ></trash-2-icon>
               </td>
