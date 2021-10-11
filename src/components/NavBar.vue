@@ -33,6 +33,7 @@
 
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "NavBar",
   data() {
@@ -42,36 +43,32 @@ export default {
   },
 
   methods: {
-    signout() {
-      const path = `${process.env.VUE_APP_API_PATH}/logout`;
-      this.$http
-        .post(path)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.success) {
-            this.$router.push({ name: "Home" });
-            this.$notify({
-              group: "alert",
-              title: res.data.message,
-              type: "success",
-            });
-          } else {
-            this.$notify({
-              group: "alert",
-              title: "登出失敗",
-              text: res.data.message,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
+    ...mapActions(["startLoading", "endLoading"]),
+    async signout() {
+      const path = `${this.$apiPath}/logout`;
+      try {
+        this.startLoading();
+        const res = await this.$http.post(path);
+        console.log(res.data);
+        if (res.data.success) {
           this.$notify({
             group: "alert",
-            title: "登出失敗",
-            text: err.message,
-            type: "error",
+            title: res.data.message,
+            type: "success",
           });
+          this.endLoading();
+          this.$router.push({ name: "Home" });
+        } else {
+          throw new Error(res.data.message);
+        }
+      } catch (error) {
+        this.$notify({
+          group: "alert",
+          title: error.message,
+          type: "error",
         });
+        this.endLoading();
+      }
     },
   },
 
@@ -103,7 +100,7 @@ export default {
 
 .form-control-dark {
   color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.5);
   border-color: rgba(255, 255, 255, 0.1);
 }
 

@@ -46,7 +46,7 @@
             class="nav-link text-start"
           >
             <trending-down-icon size="1.5x"></trending-down-icon>
-            優惠券
+            優惠券列表
           </router-link>
         </li>
       </ul>
@@ -118,35 +118,4 @@ export default {
 svg {
   vertical-align: bottom;
 }
-
-/* @media (max-width: 767.98px) {
-  .sidebar {
-    top: 5rem;
-  }
-} */
-
-// .sidebar-sticky {
-//   position: relative;
-//   top: 0;
-//   height: calc(100vh - 48px);
-//   padding-top: 0.5rem;
-//   overflow-x: hidden;
-//   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-// }
-
-// @supports ((position: -webkit-sticky) or (position: sticky)) {
-//   .sidebar-sticky {
-//     position: -webkit-sticky;
-//     position: sticky;
-//   }
-// }
-
-// .sidebar .nav-link {
-//   font-weight: 500;
-//   color: #333;
-// }
-
-// .sidebar .nav-link.active {
-//   color: $primary;
-// }
 </style>

@@ -1,14 +1,11 @@
 <template>
   <div class="py-5">
     <form class="form-signin" @submit.prevent="login">
-      <img
-        class="mb-4"
-        src="@/assets/logo-light.svg"
-        alt="Logo"
-        width="57"
-        height="57"
-      />
-      <h1 class="h3 mb-3 fw-normal">登入帳號</h1>
+      <h1 class="font-caveat mb-5">
+        <img src="@/assets/logo-light.svg" alt="Logo" width="57" height="57" />
+        Breadfirst
+      </h1>
+      <h2 class="h3 mb-3 fw-normal">登入帳號</h2>
       <label>
         <span class="visually-hidden">Email address</span>
         <input
@@ -37,6 +34,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "Login",
   data() {
@@ -48,21 +47,36 @@ export default {
     };
   },
   methods: {
-    login() {
-      const path = `${process.env.VUE_APP_API_PATH}/admin/signin`;
-      const vm = this;
-      this.$http.post(path, this.user).then((res) => {
-        console.log(path, res.data);
+    ...mapActions(["startLoading", "endLoading"]),
+    async login() {
+      const path = `${this.$apiPath}/admin/signin`;
+      try {
+        this.startLoading();
+        const res = await this.$http.post(path, this.user);
+        console.log(res.data);
         if (res.data.success) {
           const token = res.data.token;
           const expired = res.data.expired;
           console.log(token, expired);
           document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-          vm.$router.push({ name: "Home" });
+          this.endLoading();
+          this.$notify({
+            group: "alert",
+            title: res.data.message,
+            type: "success",
+          });
+          this.$router.push({ name: "Home" });
         } else {
-          console.log("登入失敗");
+          throw new Error(res.data.message);
         }
-      });
+      } catch (error) {
+        this.$notify({
+          group: "alert",
+          title: error.message,
+          type: "error",
+        });
+        this.endLoading();
+      }
     },
   },
 };

@@ -25,19 +25,6 @@ export default {
     SideBar,
     NavBar,
   },
-  methods: {
-    signout() {
-      const path = `${process.env.VUE_APP_API_PATH}/logout`;
-      const vm = this;
-      this.$http.post(path).then((res) => {
-        console.log(res.data);
-        if (res.data.success) {
-          vm.$router.push({ name: "Home" });
-        }
-      });
-    },
-  },
-
   created() {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,

@@ -14,7 +14,8 @@
         <thead class="bg-secondary">
           <tr>
             <th>名稱</th>
-            <th>折扣百分比</th>
+            <th>優惠碼</th>
+            <th>折價百分比</th>
             <th>到期日</th>
             <th>是否啟用</th>
             <th>編輯</th>
@@ -23,6 +24,7 @@
         <tbody>
           <tr v-for="(item, key) in coupons" :key="key">
             <td>{{ item.title }}</td>
+            <td>{{ item.code }}</td>
             <td>{{ item.percent }}%</td>
             <td>{{ item.due_date | date }}</td>
             <td>
@@ -101,8 +103,7 @@ export default {
       if (this.couponsMsg) {
         this.$notify({
           group: "alert",
-          title: "取得優惠券列表失敗",
-          text: this.couponsMsg,
+          title: this.couponsMsg,
           type: this.couponsMsgType,
         });
       }
@@ -110,11 +111,9 @@ export default {
 
     async updateCoupons(item) {
       await this.$store.dispatch("updateCoupons", item);
-      this.title = this.couponsMsgType === "success" ? "上傳成功" : "上傳失敗";
       this.$notify({
         group: "alert",
-        title: this.title,
-        text: this.couponsMsg,
+        title: this.couponsMsg,
         type: this.couponsMsgType,
       });
       if (this.couponsMsgType === "success") {
@@ -125,11 +124,9 @@ export default {
 
     async deleteCoupons(item) {
       await this.$store.dispatch("deleteCoupons", item);
-      this.title = this.couponsMsgType === "success" ? "刪除成功" : "刪除失敗";
       this.$notify({
         group: "alert",
-        title: this.title,
-        text: this.couponsMsg,
+        title: this.couponsMsg,
         type: this.couponsMsgType,
       });
       if (this.couponsMsgType === "success") {

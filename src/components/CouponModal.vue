@@ -54,12 +54,15 @@
                 </label>
               </div>
               <div class="mb-3">
-                <input
-                  type="number"
-                  class="form-control"
-                  v-model="tempCoupon.percent"
-                  placeholder="請輸入折扣百分比"
-                />
+                <label class="d-flex text-nowrap">
+                  <span class="d-flex align-items-center me-3">折價百分比</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    v-model="tempCoupon.percent"
+                    placeholder="請輸入折價百分比"
+                  />
+                </label>
               </div>
               <div class="mb-3">
                 <div class="form-check">
@@ -110,6 +113,7 @@ export default {
   },
 
   computed: {
+    // 供使用者查看與設定的到期日
     due_date: {
       get() {
         const dateAndTime = new Date(this.tempCoupon.due_date * 1000)
@@ -130,8 +134,8 @@ export default {
   methods: {
     show(item) {
       Object.assign(this.tempCoupon, item);
-      console.log(item);
-      console.log(this.tempCoupon);
+      // console.log(item);
+      // console.log(this.tempCoupon);
       this.showModal = true;
     },
 
@@ -142,7 +146,7 @@ export default {
     },
 
     emitResult() {
-      console.log(this.tempCoupon);
+      // console.log(this.tempCoupon);
       this.$emit("save", this.tempCoupon);
     },
   },

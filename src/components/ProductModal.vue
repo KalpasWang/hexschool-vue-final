@@ -193,7 +193,6 @@ export default {
       uploadingImg: false,
     };
   },
-
   methods: {
     show(item) {
       Object.assign(this.tempProduct, item);
@@ -210,7 +209,7 @@ export default {
       this.$emit("save", this.tempProduct);
     },
 
-    uploadImage() {
+    async uploadImage() {
       this.uploadingImg = true;
       // console.log(this);
       const uploadedFile = this.$refs.files.files[0];
@@ -241,37 +240,35 @@ export default {
         this.uploadingImg = false;
         return;
       }
-      const vm = this;
-      const path = `${process.env.VUE_APP_API_PATH}/api/${process.env.VUE_APP_API_PARAMS}/admin/upload`;
-      const formData = new FormData();
-      formData.append("file-to-upload", uploadedFile);
-      this.$http
-        .post(path, formData, {
+      try {
+        const path = `${this.$apiPath}/api/${this.$apiParams}/admin/upload`;
+        const formData = new FormData();
+        formData.append("file-to-upload", uploadedFile);
+        const res = await this.$http.post(path, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          if (res.data.success) {
-            vm.$set(vm.tempProduct, "image", res.data.imageUrl);
-            vm.uploadingImg = false;
-            this.$notify({
-              group: "alert",
-              title: "上傳成功",
-              type: "success",
-            });
-          }
-        })
-        .catch((err) => {
-          vm.uploadingImg = false;
+        });
+        console.log(res.data);
+        if (res.data.success) {
+          this.$set(this.tempProduct, "image", res.data.imageUrl);
+          this.uploadingImg = false;
           this.$notify({
             group: "alert",
-            title: "上傳失敗",
-            text: err.message,
-            type: "error",
+            title: res.data.message,
+            type: "success",
           });
+        } else {
+          throw new Error(res.data.message);
+        }
+      } catch (error) {
+        this.uploadingImg = false;
+        this.$notify({
+          group: "alert",
+          title: error.message,
+          type: "error",
         });
+      }
     },
   },
 };
